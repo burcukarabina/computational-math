@@ -49,11 +49,16 @@ nav a:hover {
     text-decoration: underline;
 }
 
-.intro {
+.intro,
+.activity-card,
+.coming-soon {
     background: white;
     padding: 25px;
     border-radius: 14px;
     box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.intro {
     margin-bottom: 35px;
 }
 
@@ -76,12 +81,8 @@ nav a:hover {
 }
 
 .activity-card {
-    background: white;
     border-left: 8px solid #FDD54F;
-    padding: 22px;
     margin: 20px 0;
-    border-radius: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 .activity-card h4 {
@@ -125,17 +126,29 @@ nav a:hover {
     color: #000;
 }
 
+.video {
+    background: #7a003c;
+    color: white;
+}
+
 .button:hover {
     opacity: 0.85;
 }
 
 .coming-soon {
-    background: white;
     border-left: 8px solid #f4c2d7;
-    padding: 22px;
     margin: 20px 0;
-    border-radius: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.video-container {
+    margin-top: 15px;
+}
+
+.video-container iframe {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    aspect-ratio: 16 / 9;
 }
 
 footer {
@@ -144,68 +157,4 @@ footer {
     text-align: center;
     font-size: 0.9rem;
     color: #555;
-}
-
-.toc-box {
-    background: white;
-    padding: 28px;
-    border-radius: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
-
-.toc-box h3 {
-    margin-top: 35px;
-    padding: 12px 16px;
-    background: #000;
-    color: white;
-    border-left: 10px solid #FDD54F;
-    border-radius: 8px;
-}
-
-.toc-box h3:first-child {
-    margin-top: 0;
-}
-
-.toc-topic {
-    margin-left: 20px;
-    padding: 10px 0;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.toc-topic h4 {
-    margin-bottom: 6px;
-    font-size: 1.15rem;
-}
-
-.toc-topic ul {
-    margin-top: 4px;
-}
-
-.toc-topic li {
-    margin: 6px 0;
-}
-
-.toc-topic a {
-    color: #000;
-    font-weight: 800;
-    text-decoration: none;
-}
-
-.toc-topic a:hover {
-    text-decoration: underline;
-}
-
-.toc-links {
-    margin-left: 12px;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.toc-links a {
-    color: #7a003c;
-}
-
-.coming-soon-line {
-    color: #777;
-    font-style: italic;
 }
