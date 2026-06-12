@@ -182,6 +182,45 @@ nav a:hover {
     border-radius: 10px;
     border: none;
 }
+.page-layout {
+    display: flex;
+    max-width: 1200px;
+    margin: auto;
+    gap: 30px;
+    padding: 30px 20px;
+}
+
+.sidebar {
+    width: 230px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    background: white;
+    border-left: 8px solid var(--uw-gold);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.09);
+}
+
+.sidebar h3 {
+    margin-top: 0;
+}
+
+.sidebar a {
+    display: block;
+    color: var(--uw-black);
+    text-decoration: none;
+    font-weight: 800;
+    margin: 10px 0;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    flex: 1;
+}
 
 footer {
     margin-top: 45px;
