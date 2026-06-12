@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Computational Activities for First-Year University Mathematics</title>
@@ -10,230 +9,280 @@
 </head>
 
 <body>
-<div class="page-layout">
 
-    <aside class="sidebar">
-        <h3>Contents</h3>
+<header>
+    <div class="container">
+        <h1>Computational Activities for First-Year University Mathematics</h1>
+        <div class="subtitle">University of Waterloo · Department of Mathematics</div>
+        <div class="header-note">
+            Interactive Python-based explorations for Calculus and Linear Algebra
+        </div>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
         <a href="#about">About</a>
         <a href="#calculus">Calculus</a>
         <a href="#sequences">Sequences</a>
         <a href="#limits">Limits</a>
         <a href="#derivatives">Derivatives</a>
         <a href="#linear-algebra">Linear Algebra</a>
+    </div>
+</nav>
+
+<div class="page-layout">
+
+    <aside class="sidebar">
+        <h3>Contents</h3>
+
+        <a href="#about">About</a>
+
+        <strong>Calculus</strong>
+        <a href="#sequences">🔁 Sequences</a>
+        <a href="#limits">📉 Limits</a>
+        <a href="#derivatives">📈 Derivatives</a>
+
+        <strong>Linear Algebra</strong>
+        <a href="#linear-algebra">Coming Soon</a>
     </aside>
 
     <main class="content">
 
-    <section class="intro" id="about">
-        <h2>Welcome</h2>
-        <p>
-            These activities are designed to help students explore first-year university
-            mathematics using Python notebooks. You can view each activity as a webpage,
-            run it interactively using Binder, or download the notebook file.
-        </p>
-    </section>
-
-    <section class="major-section" id="calculus">
-        <h2 class="major-section-title">Calculus</h2>
-
-        <div class="activity-card">
-
-    <h4>🎥 Calculus Motivation</h4>
-
-    <p>
-        New to calculus? This visual introduction from 3Blue1Brown
-        explores the core ideas of derivatives, integrals, and the
-        Fundamental Theorem of Calculus in a highly intuitive way.
-    </p>
-
-    <div class="video-container">
-        <iframe
-            width="100%"
-            height="450"
-            src="https://www.youtube.com/embed/WUvTyaaNkzM"
-            title="Essence of Calculus"
-            frameborder="0"
-            allowfullscreen>
-        </iframe>
-    </div>
-
-</div>
-
-        <h3 class="topic-title">🔁 Sequences</h3>
-
-        <div class="activity-card">
-    <span class="tag">MATH 137</span>
-    <span class="tag">15–20 min</span>
-    <span class="tag">Beginner</span>
-
-    <h4>Numerical Exploration of Limits: Sequences</h4>
-
-    <p>
-        Explore convergence, divergence to infinity, and non-convergence by looking
-        at the tail behavior of sequences. This activity introduces the intuition
-        behind limits using simple Python computations and plots.
-    </p>
-
-    <a class="button view"
-   href="NumericalExplorationOfLimitsSequences.html"
-   target="_blank"
-   rel="noopener noreferrer" >
-        View activity
-    </a>
-<a class="button run"
-       href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/NumericalExplorationOfLimitsSequences.ipynb"
-   target="_blank"
-   rel="noopener noreferrer">
-     Run interactively
-</a>
-
-    <a class="button download"
-       href="NumericalExplorationOfLimitsSequences.ipynb"
-       download>
-        Download notebook
-    </a>
-</div>
-
-        
-
-        <div class="activity-card">
-            <span class="tag">MATH 137</span>
-            <span class="tag">15–20 min</span>
-            <span class="tag">Beginner</span>
-
-            <h4>Recursive Sequences</h4>
-
+        <section class="intro" id="about">
+            <h2>Welcome</h2>
             <p>
-                Explore recursive sequences computationally and visually. Investigate boundedness,
-                monotonicity, and convergence through numerical experiments and coding.
+                These activities are designed to help students explore first-year university
+                mathematics using Python notebooks. You can view each activity as a webpage,
+                run it interactively using Binder, or download the notebook file.
             </p>
-            
-<a class="button view"
-href="recursivesequences.html"
-    target="_blank"
-   rel="noopener noreferrer" > 
-    View activity</a>
-            
-<a class="button run"
-               href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/recursivesequences.ipynb"
-   target="_blank"
-   rel="noopener noreferrer">
- Run interactively
-            </a>
-               
+        </section>
 
-            <a class="button download" href="recursivesequences.ipynb" download>
-                Download notebook
-            </a>
-        </div>
+        <section class="major-section" id="calculus">
+            <h2 class="major-section-title">Calculus</h2>
 
-        <h3 class="topic-title">📉 Function Limits</h3>
+            <div class="activity-card">
+                <h4>🎥 Before You Begin Calculus</h4>
+                <p>
+                    This visual introduction from 3Blue1Brown explores the core ideas of calculus
+                    through motion, change, derivatives, integrals, and accumulation.
+                </p>
 
-<div class="activity-card">
-    <span class="tag">MATH 137</span>
-    <span class="tag">20–25 min</span>
-    <span class="tag">Beginner</span>
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/WUvTyaaNkzM"
+                        title="Essence of Calculus"
+                        frameborder="0"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
 
-    <h4>Numerical Exploration of Limits: Functions</h4>
+            <h3 class="topic-title" id="sequences">🔁 Sequences</h3>
 
-    <p>
-        Explore limits numerically and graphically by investigating function values
-        near a point. Learn how tables, graphs, and one-sided limits help determine
-        whether a limit exists.
-    </p>
+            <div class="activity-card">
+                <span class="tag">MATH 137</span>
+                <span class="tag">15–20 min</span>
+                <span class="tag">Beginner</span>
 
+                <h4>Recursive Sequences</h4>
 
-    <a class="button view"
-       href="NumericalExplorationOfLimitsFunctions.html"
-    target="_blank"
-   rel="noopener noreferrer" > 
-    View activity
-    </a>
-            
-<a class="button run"
-       href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/NumericalExplorationOfLimitsFunctions.ipynb"
-   target="_blank"
-   rel="noopener noreferrer">
- Run interactively
-            </a>
+                <p>
+                    Explore recursive sequences computationally and visually. Investigate boundedness,
+                    monotonicity, and convergence through numerical experiments and coding.
+                </p>
 
+                <a class="button view"
+                   href="recursivesequences.html"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    View activity
+                </a>
 
-    <a class="button download"
-       href="NumericalExplorationOfLimitsFunctions.ipynb"
-       download>
-        Download notebook
-    </a>
-</div>
+                <a class="button run"
+                   href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/recursivesequences.ipynb"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Run interactively
+                </a>
 
-        <h3 class="topic-title">📈 Derivatives</h3>
+                <a class="button download"
+                   href="recursivesequences.ipynb"
+                   download>
+                    Download notebook
+                </a>
+            </div>
 
-        <div class="activity-card">
-            <span class="tag">MATH 137</span>
-            <span class="tag">15–20 min</span>
-            <span class="tag">Beginner</span>
+            <div class="activity-card">
+                <span class="tag">MATH 137</span>
+                <span class="tag">15–20 min</span>
+                <span class="tag">Beginner</span>
 
-            <h4>Linear Approximations</h4>
+                <h4>Numerical Exploration of Limits: Sequences</h4>
 
-            <p>
-                Explore how tangent lines can be used to approximate function values near a point.
-                Compare exact values and approximations using graphical and computational methods.
-            </p>
+                <p>
+                    Explore convergence, divergence to infinity, and non-convergence by looking
+                    at the tail behavior of sequences. This activity introduces the intuition
+                    behind limits using simple Python computations and plots.
+                </p>
 
+                <a class="button view"
+                   href="NumericalExplorationOfLimitsSequences.html"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    View activity
+                </a>
 
-             <a class="button view"
-href="LinearApproximations.html"    target="_blank"
-   rel="noopener noreferrer" > 
-    View activity
-    </a>
-            
-<a class="button run"
-               href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/LinearApproximations.ipynb"
-   target="_blank"
-   rel="noopener noreferrer">
- Run interactively
-</a>
+                <a class="button run"
+                   href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/NumericalExplorationOfLimitsSequences.ipynb"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Run interactively
+                </a>
 
-            <a class="button download" href="LinearApproximations.ipynb" download>
-                Download notebook
-            </a>
-        </div>
-    </section>
+                <a class="button download"
+                   href="NumericalExplorationOfLimitsSequences.ipynb"
+                   download>
+                    Download notebook
+                </a>
+            </div>
 
-    <section class="major-section" id="linear-algebra">
-        <h2 class="major-section-title">Linear Algebra</h2>
-        <div class="activity-card">
+            <h3 class="topic-title" id="limits">📉 Limits</h3>
 
-    <h4>🎥 Linear Algebra Motivation</h4>
+            <div class="activity-card">
+                <span class="tag">MATH 137</span>
+                <span class="tag">20–25 min</span>
+                <span class="tag">Beginner</span>
 
-    <p>
-        New to linear algebra? This visual introduction from 3Blue1Brown
-        develops intuition for vectors, matrices, transformations, and
-        the geometric ideas that underlie first-year linear algebra.
-    </p>
+                <h4>Numerical Exploration of Limits: Functions</h4>
 
-    <div class="video-container">
-        <iframe
-            width="100%"
-            height="450"
-            src="https://www.youtube.com/embed/fNk_zzaMoSs"
-            title="Essence of Linear Algebra"
-            frameborder="0"
-            allowfullscreen>
-        </iframe>
-    </div>
+                <p>
+                    Explore limits numerically and graphically by investigating function values
+                    near a point. Learn how tables, graphs, and one-sided limits help determine
+                    whether a limit exists.
+                </p>
 
-</div>
+                <a class="button view"
+                   href="NumericalExplorationOfLimitsFunctions.html"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    View activity
+                </a>
 
-        <div class="coming-soon">
-            <h3>Coming Soon</h3>
-            <p>
-                Future activities will include systems of equations, matrix operations,
-                linear transformations, eigenvalues, and eigenvectors.
-            </p>
-        </div>
-    </section>
+                <a class="button run"
+                   href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/NumericalExplorationOfLimitsFunctions.ipynb"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Run interactively
+                </a>
 
-</main>
+                <a class="button download"
+                   href="NumericalExplorationOfLimitsFunctions.ipynb"
+                   download>
+                    Download notebook
+                </a>
+            </div>
+
+            <div class="activity-card">
+                <span class="tag">MATH 137</span>
+                <span class="tag">20–25 min</span>
+                <span class="tag">Beginner</span>
+
+                <h4>Exploring the Squeeze Theorem</h4>
+
+                <p>
+                    Use tables and graphs to investigate how an oscillating function can be trapped
+                    between two functions with the same limit. This activity emphasizes the open
+                    interval condition and the idea of being squeezed near a point.
+                </p>
+
+                <a class="button view"
+                   href="ExploringTheSqueezeTheorem.html"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    View activity
+                </a>
+
+                <a class="button run"
+                   href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/ExploringTheSqueezeTheorem.ipynb"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Run interactively
+                </a>
+
+                <a class="button download"
+                   href="ExploringTheSqueezeTheorem.ipynb"
+                   download>
+                    Download notebook
+                </a>
+            </div>
+
+            <h3 class="topic-title" id="derivatives">📈 Derivatives</h3>
+
+            <div class="activity-card">
+                <span class="tag">MATH 137</span>
+                <span class="tag">15–20 min</span>
+                <span class="tag">Beginner</span>
+
+                <h4>Linear Approximations</h4>
+
+                <p>
+                    Explore how tangent lines can be used to approximate function values near a point.
+                    Compare exact values and approximations using graphical and computational methods.
+                </p>
+
+                <a class="button view"
+                   href="LinearApproximations.html"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    View activity
+                </a>
+
+                <a class="button run"
+                   href="https://mybinder.org/v2/gh/burcukarabina/computationalcalculus/HEAD?urlpath=tree/LinearApproximations.ipynb"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Run interactively
+                </a>
+
+                <a class="button download"
+                   href="LinearApproximations.ipynb"
+                   download>
+                    Download notebook
+                </a>
+            </div>
+        </section>
+
+        <section class="major-section" id="linear-algebra">
+            <h2 class="major-section-title">Linear Algebra</h2>
+
+            <div class="activity-card">
+                <h4>🎥 Before You Begin Linear Algebra</h4>
+                <p>
+                    This visual introduction from 3Blue1Brown develops intuition for vectors,
+                    matrices, transformations, and the geometric ideas behind linear algebra.
+                </p>
+
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/fNk_zzaMoSs"
+                        title="Essence of Linear Algebra"
+                        frameborder="0"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="coming-soon">
+                <h3>Coming Soon</h3>
+                <p>
+                    Future activities will include systems of equations, matrix operations,
+                    linear transformations, eigenvalues, and eigenvectors.
+                </p>
+            </div>
+        </section>
+
+    </main>
 
 </div>
 
