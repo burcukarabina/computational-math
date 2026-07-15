@@ -1,27 +1,24 @@
 /* =====================================================
-   University of Waterloo Matrix Calculator
-   Official-inspired palette:
-   Gold 1: #F2EDA8
-   Gold 2: #FAE100
-   Gold 3: #FED34C
-   Gold 4: #EAAB00
-   Black:  #000000
-   Grey 1: #DFDFDF
-   Grey 2: #A2A2A2
-   Grey 3: #787878
-   White:  #FFFFFF
+   Matrix Calculator — Stable Centered Modal
+   Waterloo-inspired palette
    ===================================================== */
 
 :root {
- --uw-black: #000000;
+  --uw-black: #000000;
   --uw-white: #ffffff;
 
-  --uw-gold-light: #F2EDA8;      /* Primary accent */
-  --uw-gold-dark:  #EAAB00;      /* Borders/highlights */
+  --uw-gold-light: #f2eda8;
+  --uw-gold-dark: #eaab00;
 
-  --uw-grey-light: #DFDFDF;
-  --uw-grey-medium:#A2A2A2;
-  --uw-grey-dark:  #787878;
+  --uw-grey-light: #dfdfdf;
+  --uw-grey-medium: #a2a2a2;
+  --uw-grey-dark: #787878;
+
+  --mc-background: #f8f8f8;
+  --mc-result-background: #fcfbf5;
+
+  --mc-error: #a00000;
+  --mc-error-background: #fff1f1;
 }
 
 /* -----------------------------------------------------
@@ -31,10 +28,9 @@
 .matrixCalculator,
 .mc-button {
   box-sizing: border-box;
-  border: 2px solid var(--uw-black);
+  border: 1px solid var(--uw-grey-dark);
   border-radius: 5px;
   background: var(--uw-gold-light);
-  border: 1px solid var(--uw-grey-dark);
   color: var(--uw-black);
   padding: 9px 16px;
   font-family: inherit;
@@ -51,8 +47,8 @@
 
 .matrixCalculator:hover,
 .mc-button:hover {
-  background: #f6f1c4;
   border-color: var(--uw-gold-dark);
+  background: #f6f1c4;
 }
 
 .matrixCalculator:active,
@@ -62,11 +58,9 @@
 
 .matrixCalculator:focus-visible,
 .mc-button:focus-visible {
-  outline: 3px solid var(--uw-black);
-  outline-offset: 3px;
+  outline: 3px solid var(--uw-gold-light);
+  outline-offset: 2px;
 }
-
-/* Secondary buttons: Build, Clear, and Close */
 
 .mc-secondary {
   border-color: var(--uw-grey-dark);
@@ -81,23 +75,24 @@
 }
 
 /* -----------------------------------------------------
-   Modal overlay
+   Centered modal overlay
    ----------------------------------------------------- */
 
 .mc-overlay {
   display: none;
   position: fixed;
-  top: 80px;
-  right: 20px;
+  inset: 0;
   z-index: 999999;
-  width: auto;
-  height: auto;
-  padding: 0;
-  background: transparent;
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 28px 14px;
+  background: rgba(0, 0, 0, 0.55);
 }
 
 .mc-overlay-visible {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 /* -----------------------------------------------------
@@ -105,38 +100,25 @@
    ----------------------------------------------------- */
 
 .mc-window {
-  width: min(520px, calc(100vw - 40px));
-  max-height: calc(100vh - 110px);
+  position: relative;
+  width: min(820px, 96%);
   box-sizing: border-box;
-  margin: 0;
-  overflow-y: auto;
+  margin: auto;
+  padding: 0 24px 24px;
+  overflow: hidden;
   border: 1px solid var(--uw-grey-medium);
   border-radius: 9px;
   background: var(--uw-white);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.34);
 }
 
-/*
-  Waterloo-inspired colour bar.
-  The official Waterloo colour bar uses black with
-  four gold levels arranged from lightest to darkest.
-*/
+/* Single thin Waterloo gold line */
 
 .mc-window::before {
   display: block;
-  height: 9px;
+  height: 3px;
   margin: 0 -24px;
-  background: linear-gradient(
-    to right,
-    var(--uw-gold-light) 0%,
-    var(--uw-gold-light) 25%,
-    var(--uw-gold-bright) 25%,
-    var(--uw-gold-bright) 50%,
-    var(--uw-gold-primary) 50%,
-    var(--uw-gold-primary) 75%,
-    var(--uw-gold-dark) 75%,
-    var(--uw-gold-dark) 100%
-  );
+  background: var(--uw-gold-dark);
   content: "";
 }
 
@@ -151,8 +133,8 @@
   gap: 20px;
   margin: 0 -24px;
   padding: 17px 24px 15px;
-  border-bottom:2px solid var(--uw-gold-light);
-  background: var(--uw-black);
+  border-bottom: 1px solid var(--uw-gold-dark);
+  background: #111111;
   color: var(--uw-white);
 }
 
@@ -176,18 +158,18 @@
 }
 
 #mc-close:hover {
-  border-color: var(--uw-gold-primary);
-  background: var(--uw-gold-primary);
+  border-color: var(--uw-gold-light);
+  background: var(--uw-gold-light);
   color: var(--uw-black);
 }
 
 #mc-close:focus-visible {
-  outline: 3px solid var(--uw-gold-primary);
+  outline: 3px solid var(--uw-gold-light);
   outline-offset: 2px;
 }
 
 /* -----------------------------------------------------
-   Dimension controls
+   Controls
    ----------------------------------------------------- */
 
 .mc-controls {
@@ -198,7 +180,7 @@
   margin: 20px 0 16px;
   padding: 14px;
   border: 1px solid var(--uw-grey-light);
-  border-left:5px solid var(--uw-gold-light);
+  border-left: 5px solid var(--uw-gold-light);
   border-radius: 5px;
   background: var(--mc-background);
 }
@@ -225,12 +207,49 @@
 }
 
 .mc-controls select:focus-visible {
-  outline: 3px solid var(--uw-gold-primary);
+  outline: 3px solid var(--uw-gold-light);
   outline-offset: 2px;
 }
 
+/* Compact dimensions */
+
+.mc-dimensions {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mc-dimensions-label {
+  margin-right: 2px;
+  font-weight: 700;
+}
+
+.mc-times {
+  color: var(--uw-black);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mc-show-steps-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mc-show-steps-label input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--uw-gold-dark);
+  cursor: pointer;
+}
+
 /* -----------------------------------------------------
-   Matrix input
+   Matrix input and result brackets
    ----------------------------------------------------- */
 
 .mc-input-section {
@@ -244,8 +263,6 @@
   position: relative;
   padding: 11px 21px;
 }
-
-/* Scalable matrix brackets */
 
 .mc-matrix-brackets::before,
 .mc-matrix-brackets::after {
@@ -300,9 +317,8 @@
 .mc-grid input:focus {
   border-color: var(--uw-black);
   outline: none;
-  background: #fffdf3;
- box-shadow:
-0 0 0 3px rgba(242,237,168,.75);
+  background: #fffdf6;
+  box-shadow: 0 0 0 3px rgba(242, 237, 168, 0.85);
 }
 
 /* -----------------------------------------------------
@@ -319,11 +335,11 @@
 
 .mc-operation-buttons .mc-button {
   min-width: 135px;
-  background: var(--uw-gold-primary);
+  background: var(--uw-gold-light);
 }
 
 .mc-operation-buttons .mc-button:hover {
-  background: var(--uw-gold-bright);
+  background: #f6f1c4;
 }
 
 /* -----------------------------------------------------
@@ -340,7 +356,7 @@
 .mc-result-section h3 {
   display: inline-block;
   margin: 0 0 10px;
-  border-bottom: 4px solid var(--uw-gold-primary);
+  border-bottom: 3px solid var(--uw-gold-light);
   color: var(--uw-black);
   padding-bottom: 4px;
   font-size: 19px;
@@ -350,20 +366,20 @@
   box-sizing: border-box;
   min-height: 52px;
   border: 1px solid var(--uw-grey-light);
-  border-left: 6px solid var(--uw-gold-dark);
+  border-left: 5px solid var(--uw-gold-light);
   border-radius: 5px;
-  background:#fcfbf5;
-  border-left:5px solid var(--uw-gold-dark);
+  background: var(--mc-result-background);
   color: var(--uw-black);
   padding: 15px;
   text-align: center;
   font-weight: 600;
 }
 
-/*
-  The matrix result generated by JavaScript reuses
-  .mc-matrix-brackets and .mc-input-section.
-*/
+.mc-result-title {
+  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
 
 .mc-result-grid {
   color: var(--uw-black);
@@ -371,7 +387,63 @@
 }
 
 /* -----------------------------------------------------
-   Error display
+   RREF steps
+   ----------------------------------------------------- */
+
+.mc-row-steps {
+  margin-top: 22px;
+  border-top: 1px solid var(--uw-grey-light);
+  padding-top: 18px;
+  text-align: left;
+}
+
+.mc-row-steps h4 {
+  display: inline-block;
+  margin: 0 0 15px;
+  border-bottom: 3px solid var(--uw-gold-light);
+  padding-bottom: 4px;
+  font-size: 17px;
+}
+
+.mc-row-step {
+  margin: 0 0 20px;
+  border: 1px solid var(--uw-grey-light);
+  border-left: 5px solid var(--uw-gold-light);
+  border-radius: 5px;
+  background: var(--uw-white);
+  padding: 12px;
+}
+
+.mc-row-step-operation {
+  margin-bottom: 8px;
+  color: var(--uw-black);
+  font-family:
+    "Cambria Math",
+    "Times New Roman",
+    serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.mc-step-number {
+  display: inline-block;
+  min-width: 25px;
+  color: var(--uw-grey-dark);
+}
+
+.mc-row-step .mc-input-section {
+  padding-top: 8px;
+  padding-bottom: 5px;
+}
+
+.mc-no-steps {
+  margin: 5px 0;
+  color: #444444;
+  font-weight: 500;
+}
+
+/* -----------------------------------------------------
+   Errors
    ----------------------------------------------------- */
 
 #mc-result.mc-error {
@@ -448,6 +520,15 @@
     float: right;
   }
 
+  .mc-dimensions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .mc-show-steps-label {
+    margin-left: 0;
+  }
+
   .mc-grid {
     gap: 5px;
   }
@@ -464,104 +545,8 @@
   .mc-operation-buttons .mc-button {
     width: 100%;
   }
-}
-/* -----------------------------------------------------
-   Compact dimension controls
-   ----------------------------------------------------- */
 
-.mc-dimensions {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.mc-dimensions-label {
-  margin-right: 2px;
-  font-weight: 700;
-}
-
-.mc-times {
-  color: var(--uw-black);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.mc-show-steps-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-left: auto;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.mc-show-steps-label input {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--uw-gold-dark);
-  cursor: pointer;
-}
-
-/* -----------------------------------------------------
-   RREF result and row operations
-   ----------------------------------------------------- */
-
-.mc-result-title {
-  margin-bottom: 8px;
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.mc-row-steps {
-  margin-top: 22px;
-  border-top: 1px solid var(--uw-grey-light);
-  padding-top: 18px;
-  text-align: left;
-}
-
-.mc-row-steps h4 {
-  display: inline-block;
-  margin: 0 0 15px;
-  border-bottom: 3px solid var(--uw-gold-primary);
-  padding-bottom: 4px;
-  font-size: 17px;
-}
-
-.mc-row-step {
-  margin: 0 0 20px;
-  border: 1px solid var(--uw-grey-light);
-  border-left:5px solid var(--uw-gold-light);
-  border-radius: 5px;
-  background: var(--uw-white);
-  padding: 12px;
-}
-
-.mc-row-step-operation {
-  margin-bottom: 8px;
-  color: var(--uw-black);
-  font-family:
-    "Cambria Math",
-    "Times New Roman",
-    serif;
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.mc-step-number {
-  display: inline-block;
-  min-width: 25px;
-  color: var(--uw-grey-dark);
-}
-
-.mc-row-step .mc-input-section {
-  padding-top: 8px;
-  padding-bottom: 5px;
-}
-
-.mc-no-steps {
-  margin: 5px 0;
-  color: #444444;
-  font-weight: 500;
+  .mc-row-step {
+    padding: 9px;
+  }
 }
