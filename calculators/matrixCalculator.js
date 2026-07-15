@@ -584,48 +584,127 @@
    * RREF
    */
 
-  function calculateRREF(originalMatrix) {
-    const matrix =
-      cloneMatrix(originalMatrix);
 
-    const rowCount = matrix.length;
-    const columnCount =
-      matrix[0].length;
+  function formatRowReplacement(
+  targetRow,
+  pivotRow,
+  multiplier
+) {
+  const target =
+    "R" + (targetRow + 1);
 
-    let pivotRow = 0;
+  const pivot =
+    "R" + (pivotRow + 1);
 
-    for (
-      let pivotColumn = 0;
-      pivotColumn < columnCount &&
-      pivotRow < rowCount;
-      pivotColumn++
+  const value =
+    multiplier.toString();
+
+  if (value === "1") {
+    return (
+      target +
+      " \u2190 " +
+      target +
+      " \u2212 " +
+      pivot
+    );
+  }
+
+  if (value === "-1") {
+    return (
+      target +
+      " \u2190 " +
+      target +
+      " + " +
+      pivot
+    );
+  }
+
+  if (value.startsWith("-")) {
+    return (
+      target +
+      " \u2190 " +
+      target +
+      " + (" +
+      value.substring(1) +
+      ")" +
+      pivot
+    );
+  }
+
+  return (
+    target +
+    " \u2190 " +
+    target +
+    " \u2212 (" +
+    value +
+    ")" +
+    pivot
+  );
+}
+
+  
+ function calculateRREF(originalMatrix) {
+  const matrix = cloneMatrix(originalMatrix);
+  const steps = [];
+
+  const rowCount = matrix.length;
+  const columnCount = matrix[0].length;
+
+  let pivotRow = 0;
+
+  function recordStep(operation) {
+    steps.push({
+      operation: operation,
+      matrix: cloneMatrix(matrix)
+    });
+  }
+
+  for (
+    let pivotColumn = 0;
+    pivotColumn < columnCount &&
+    pivotRow < rowCount;
+    pivotColumn++
+  ) {
+    let selectedRow = pivotRow;
+
+    while (
+      selectedRow < rowCount &&
+      matrix[selectedRow][pivotColumn].isZero()
     ) {
-      let selectedRow = pivotRow;
+      selectedRow++;
+    }
 
-      while (
-        selectedRow < rowCount &&
-        matrix[selectedRow][
-          pivotColumn
-        ].isZero()
-      ) {
-        selectedRow++;
-      }
+    if (selectedRow === rowCount) {
+      continue;
+    }
 
-      if (selectedRow === rowCount) {
-        continue;
-      }
+    /*
+     * Move a nonzero entry into the pivot position.
+     */
 
-      if (selectedRow !== pivotRow) {
-        swapRows(
-          matrix,
-          selectedRow,
-          pivotRow
-        );
-      }
+    if (selectedRow !== pivotRow) {
+      swapRows(
+        matrix,
+        selectedRow,
+        pivotRow
+      );
 
-      const pivotValue =
-        matrix[pivotRow][pivotColumn];
+      recordStep(
+        "R" +
+          (pivotRow + 1) +
+          " \u2194 R" +
+          (selectedRow + 1)
+      );
+    }
 
+    /*
+     * Scale the pivot row so that the pivot is 1.
+     */
+
+    const pivotValue =
+      matrix[pivotRow][pivotColumn];
+
+    if (pivotValue.toString() !== "1") {
       for (
         let column = 0;
         column < columnCount;
@@ -637,41 +716,67 @@
           );
       }
 
-      for (
-        let row = 0;
-        row < rowCount;
-        row++
-      ) {
-        if (row === pivotRow) {
-          continue;
-        }
-
-        const multiplier =
-          matrix[row][pivotColumn];
-
-        if (multiplier.isZero()) {
-          continue;
-        }
-
-        for (
-          let column = 0;
-          column < columnCount;
-          column++
-        ) {
-          matrix[row][column] =
-            matrix[row][column].subtract(
-              multiplier.multiply(
-                matrix[pivotRow][column]
-              )
-            );
-        }
-      }
-
-      pivotRow++;
+      recordStep(
+        "R" +
+          (pivotRow + 1) +
+          " \u2190 R" +
+          (pivotRow + 1) +
+          " / (" +
+          pivotValue.toString() +
+          ")"
+      );
     }
 
-    return matrix;
+    /*
+     * Eliminate the remaining entries in the pivot column.
+     */
+
+    for (
+      let row = 0;
+      row < rowCount;
+      row++
+    ) {
+      if (row === pivotRow) {
+        continue;
+      }
+
+      const multiplier =
+        matrix[row][pivotColumn];
+
+      if (multiplier.isZero()) {
+        continue;
+      }
+
+      for (
+        let column = 0;
+        column < columnCount;
+        column++
+      ) {
+        matrix[row][column] =
+          matrix[row][column].subtract(
+            multiplier.multiply(
+              matrix[pivotRow][column]
+            )
+          );
+      }
+
+      recordStep(
+        formatRowReplacement(
+          row,
+          pivotRow,
+          multiplier
+        )
+      );
+    }
+
+    pivotRow++;
   }
+
+  return {
+    matrix: matrix,
+    steps: steps
+  };
+}
 
   /*
    * Determinant
