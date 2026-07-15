@@ -75,7 +75,7 @@
 }
 
 /* -----------------------------------------------------
-   Centered modal overlay
+   Draggable floating calculator
    ----------------------------------------------------- */
 
 .mc-overlay {
@@ -83,18 +83,43 @@
   position: fixed;
   inset: 0;
   z-index: 999999;
-  box-sizing: border-box;
-  overflow: auto;
-  padding: 28px 14px;
-  background: rgba(0, 0, 0, 0.55);
+
+  /*
+   * The overlay spans the page, but does not block
+   * interaction with the Möbius question.
+   */
+  pointer-events: none;
+  background: transparent;
 }
 
 .mc-overlay-visible {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  display: block;
 }
 
+.mc-window {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+
+  width: min(650px, calc(100vw - 48px));
+  max-height: calc(100vh - 105px);
+
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 24px 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  border: 1px solid var(--uw-grey-medium);
+  border-radius: 9px;
+  background: var(--uw-white);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.34);
+
+  /*
+   * Re-enable interaction inside the calculator.
+   */
+  pointer-events: auto;
+}
 /* -----------------------------------------------------
    Calculator window
    ----------------------------------------------------- */
@@ -136,6 +161,8 @@
   border-bottom: 1px solid var(--uw-gold-dark);
   background: #111111;
   color: var(--uw-white);
+     cursor: move;
+  user-select: none;
 }
 
 .mc-header h2 {
@@ -143,6 +170,19 @@
   color: var(--uw-white);
   font-size: 24px;
   font-weight: 700;
+}
+
+.mc-header::after {
+  content: "Drag to move";
+  margin-left: auto;
+  color: var(--uw-grey-light);
+  font-size: 12px;
+  font-weight: 400;
+}
+.mc-header button,
+.mc-header select,
+.mc-header input {
+  cursor: default;
 }
 
 #mc-close {
@@ -167,6 +207,7 @@
   outline: 3px solid var(--uw-gold-light);
   outline-offset: 2px;
 }
+
 
 /* -----------------------------------------------------
    Controls
@@ -478,10 +519,20 @@
    Responsive layout
    ----------------------------------------------------- */
 
-@media (max-width: 600px) {
-  .mc-overlay {
-    padding: 8px;
+@media (max-width: 700px) {
+  .mc-window {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+
+    width: auto;
+    max-height: calc(100vh - 20px);
+
+    padding-right: 15px;
+    padding-bottom: 18px;
+    padding-left: 15px;
   }
+}
 
   .mc-window {
     width: 100%;
