@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>Matrix Calculator</title>
+
+  <link
+    rel="stylesheet"
+    href="../css/calculators.css"
+  >
+</head>
+
+<body class="mc-standalone-page">
+
+  <button
+    type="button"
+    class="matrixCalculator"
+    id="mc-auto-open"
+    style="display:none;"
+  >
+    Open Matrix Calculator
+  </button>
+
+  <script src="matrixCalculator.js?v=5"></script>
+
+  <script>
+    window.addEventListener("load", function () {
+      if (window.MatrixCalculator) {
+        window.MatrixCalculator.open();
+      }
+    });
+  </script>
+
+</body>
+</html>
