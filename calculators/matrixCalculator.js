@@ -1078,28 +1078,81 @@
       escapeHTML(value.toString());
   }
 
+  function showRREFResult(
+  calculation,
+  showSteps
+) {
+  const result =
+    document.getElementById("mc-result");
+
+  result.classList.remove("mc-error");
+
+  let html =
+    '<div class="mc-result-title">' +
+    "Reduced Row Echelon Form" +
+    "</div>" +
+    matrixToHTML(calculation.matrix);
+
+  if (showSteps) {
+    html +=
+      '<div class="mc-row-steps">' +
+      "<h4>Row Operations</h4>";
+
+    if (calculation.steps.length === 0) {
+      html +=
+        '<p class="mc-no-steps">' +
+        "The matrix is already in reduced row echelon form." +
+        "</p>";
+    } else {
+      calculation.steps.forEach(
+        function (step, index) {
+          html +=
+            '<div class="mc-row-step">' +
+            '<div class="mc-row-step-operation">' +
+            '<span class="mc-step-number">' +
+            (index + 1) +
+            ".</span> " +
+            escapeHTML(step.operation) +
+            "</div>" +
+            matrixToHTML(step.matrix) +
+            "</div>";
+        }
+      );
+    }
+
+    html += "</div>";
+  }
+
+  result.innerHTML = html;
+}
+
   /*
    * Button actions
    */
 
   function handleRREF() {
-    try {
-      const matrix = readMatrix();
+  try {
+    const matrix = readMatrix();
 
-      const result =
-        calculateRREF(matrix);
+    const calculation =
+      calculateRREF(matrix);
 
-      showMatrixResult(
-        "Reduced Row Echelon Form",
-        result
-      );
-    } catch (error) {
-      showMessage(
-        error.message,
-        true
-      );
-    }
+    const showSteps =
+      document.getElementById(
+        "mc-show-steps"
+      ).checked;
+
+    showRREFResult(
+      calculation,
+      showSteps
+    );
+  } catch (error) {
+    showMessage(
+      error.message,
+      true
+    );
   }
+}
 
   function handleDeterminant() {
     try {
