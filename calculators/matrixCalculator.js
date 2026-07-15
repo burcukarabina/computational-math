@@ -279,37 +279,42 @@
           </button>
         </div>
 
-        <div class="mc-controls">
-          <label>
-            Rows:
-            <select id="mc-rows">
-              ${createDimensionOptions(3)}
-            </select>
-          </label>
+       <div class="mc-controls">
+  <div class="mc-dimensions">
+    <span class="mc-dimensions-label">Dimensions:</span>
 
-          <label>
-            Columns:
-            <select id="mc-columns">
-              ${createDimensionOptions(3)}
-            </select>
-          </label>
+    <select id="mc-rows" aria-label="Number of rows">
+      ${createDimensionOptions(3)}
+    </select>
 
-          <button
-            type="button"
-            id="mc-build"
-            class="mc-button"
-          >
-            Build Matrix
-          </button>
+    <span class="mc-times" aria-hidden="true">&times;</span>
 
-          <button
-            type="button"
-            id="mc-clear"
-            class="mc-button mc-secondary"
-          >
-            Clear Entries
-          </button>
-        </div>
+    <select id="mc-columns" aria-label="Number of columns">
+      ${createDimensionOptions(3)}
+    </select>
+  </div>
+
+  <button
+    type="button"
+    id="mc-build"
+    class="mc-button mc-secondary"
+  >
+    Resize Matrix
+  </button>
+
+  <button
+    type="button"
+    id="mc-clear"
+    class="mc-button mc-secondary"
+  >
+    Clear Entries
+  </button>
+
+  <label class="mc-show-steps-label">
+    <input type="checkbox" id="mc-show-steps">
+    Show row operations
+  </label>
+</div>
 
         <div class="mc-input-section">
           <div class="mc-matrix-brackets">
