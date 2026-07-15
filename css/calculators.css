@@ -87,18 +87,17 @@
 .mc-overlay {
   display: none;
   position: fixed;
-  inset: 0;
+  top: 80px;
+  right: 20px;
   z-index: 999999;
-  box-sizing: border-box;
-  overflow: auto;
-  padding: 28px 14px;
-  background: rgba(0, 0, 0, 0.62);
+  width: auto;
+  height: auto;
+  padding: 0;
+  background: transparent;
 }
 
 .mc-overlay-visible {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  display: block;
 }
 
 /* -----------------------------------------------------
@@ -106,16 +105,15 @@
    ----------------------------------------------------- */
 
 .mc-window {
-  position: relative;
-  width: min(820px, 96%);
+  width: min(520px, calc(100vw - 40px));
+  max-height: calc(100vh - 110px);
   box-sizing: border-box;
-  margin: auto;
-  padding: 0 24px 24px;
-  overflow: hidden;
+  margin: 0;
+  overflow-y: auto;
   border: 1px solid var(--uw-grey-medium);
   border-radius: 9px;
   background: var(--uw-white);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.32);
 }
 
 /*
