@@ -4,7 +4,7 @@ function injectCSS() {
 
     if (document.getElementById("matrixCalculatorCSS"))
         return;
-
+    
     const link = document.createElement("link");
 
     link.id = "matrixCalculatorCSS";
