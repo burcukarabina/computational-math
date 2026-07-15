@@ -550,3 +550,27 @@
     padding: 9px;
   }
 }
+/* -----------------------------------------------------
+   Standalone calculator page
+   ----------------------------------------------------- */
+
+.mc-standalone-page {
+  min-height: 100vh;
+  margin: 0;
+  background: #f3f3f3;
+}
+
+.mc-standalone-page .mc-overlay {
+  display: flex;
+  position: static;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 12px;
+  background: transparent;
+}
+
+.mc-standalone-page .mc-window {
+  width: min(820px, 100%);
+  margin: auto;
+  box-shadow: none;
+}
