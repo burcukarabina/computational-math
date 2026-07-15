@@ -218,7 +218,7 @@
     link.id = CSS_ID;
     link.rel = "stylesheet";
     link.href =
-  "https://burcukarabina.github.io/computational-math/css/calculators.css?v=4";
+  "https://burcukarabina.github.io/computational-math/css/calculators.css?v=5";
 
     document.head.appendChild(link);
   }
@@ -1206,21 +1206,147 @@
    * Open, close, and event handling
    */
 
-  function openCalculator() {
-    loadCSS();
-    createModal();
+  function makeCalculatorDraggable() {
+  const windowElement =
+    document.querySelector("#matrixCalculatorModal .mc-window");
 
-    const modal =
-      document.getElementById(MODAL_ID);
+  const header =
+    document.querySelector("#matrixCalculatorModal .mc-header");
 
-    modal.classList.add(
-      "mc-overlay-visible"
-    );
-
-    document
-      .querySelector("#mc-grid input")
-      ?.focus();
+  if (!windowElement || !header) {
+    return;
   }
+
+  if (header.dataset.draggingInitialized === "true") {
+    return;
+  }
+
+  header.dataset.draggingInitialized = "true";
+
+  let isDragging = false;
+  let startingMouseX = 0;
+  let startingMouseY = 0;
+  let startingLeft = 0;
+  let startingTop = 0;
+
+  header.addEventListener("mousedown", function (event) {
+    /*
+     * Do not start dragging when the close button is clicked.
+     */
+    if (event.target.closest("button")) {
+      return;
+    }
+
+    isDragging = true;
+
+    const rectangle =
+      windowElement.getBoundingClientRect();
+
+    startingMouseX = event.clientX;
+    startingMouseY = event.clientY;
+    startingLeft = rectangle.left;
+    startingTop = rectangle.top;
+
+    /*
+     * Switch from right-positioning to left-positioning.
+     */
+    windowElement.style.right = "auto";
+    windowElement.style.left =
+      startingLeft + "px";
+    windowElement.style.top =
+      startingTop + "px";
+
+    document.body.style.userSelect = "none";
+
+    event.preventDefault();
+  });
+
+  document.addEventListener("mousemove", function (event) {
+    if (!isDragging) {
+      return;
+    }
+
+    const horizontalChange =
+      event.clientX - startingMouseX;
+
+    const verticalChange =
+      event.clientY - startingMouseY;
+
+    const windowWidth =
+      windowElement.offsetWidth;
+
+    const windowHeight =
+      windowElement.offsetHeight;
+
+    /*
+     * Keep part of the calculator visible on screen.
+     */
+    const minimumVisibleAmount = 80;
+
+    const minimumLeft =
+      -windowWidth + minimumVisibleAmount;
+
+    const maximumLeft =
+      window.innerWidth - minimumVisibleAmount;
+
+    const minimumTop = 0;
+
+    const maximumTop =
+      Math.max(
+        0,
+        window.innerHeight - minimumVisibleAmount
+      );
+
+    const newLeft =
+      Math.min(
+        maximumLeft,
+        Math.max(
+          minimumLeft,
+          startingLeft + horizontalChange
+        )
+      );
+
+    const newTop =
+      Math.min(
+        maximumTop,
+        Math.max(
+          minimumTop,
+          startingTop + verticalChange
+        )
+      );
+
+    windowElement.style.left =
+      newLeft + "px";
+
+    windowElement.style.top =
+      newTop + "px";
+  });
+
+  document.addEventListener("mouseup", function () {
+    if (!isDragging) {
+      return;
+    }
+
+    isDragging = false;
+    document.body.style.userSelect = "";
+  });
+} 
+  function openCalculator() {
+  loadCSS();
+  createModal();
+  makeCalculatorDraggable();
+
+  const modal =
+    document.getElementById(MODAL_ID);
+
+  modal.classList.add(
+    "mc-overlay-visible"
+  );
+
+  document
+    .querySelector("#mc-grid input")
+    ?.focus();
+}
 
   function closeCalculator() {
     const modal =
@@ -1234,13 +1360,7 @@
   }
 
   function bindModalEvents() {
-    document
-      .getElementById("mc-close")
-      .addEventListener(
-        "click",
-        closeCalculator
-      );
-
+  
     document
       .getElementById(
         "mc-close-bottom"
