@@ -472,3 +472,103 @@
     width: 100%;
   }
 }
+/* -----------------------------------------------------
+   Compact dimension controls
+   ----------------------------------------------------- */
+
+.mc-dimensions {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mc-dimensions-label {
+  margin-right: 2px;
+  font-weight: 700;
+}
+
+.mc-times {
+  color: var(--uw-black);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mc-show-steps-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mc-show-steps-label input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--uw-gold-dark);
+  cursor: pointer;
+}
+
+/* -----------------------------------------------------
+   RREF result and row operations
+   ----------------------------------------------------- */
+
+.mc-result-title {
+  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.mc-row-steps {
+  margin-top: 22px;
+  border-top: 1px solid var(--uw-grey-light);
+  padding-top: 18px;
+  text-align: left;
+}
+
+.mc-row-steps h4 {
+  display: inline-block;
+  margin: 0 0 15px;
+  border-bottom: 3px solid var(--uw-gold-primary);
+  padding-bottom: 4px;
+  font-size: 17px;
+}
+
+.mc-row-step {
+  margin: 0 0 20px;
+  border: 1px solid var(--uw-grey-light);
+  border-left: 5px solid var(--uw-gold-dark);
+  border-radius: 5px;
+  background: var(--uw-white);
+  padding: 12px;
+}
+
+.mc-row-step-operation {
+  margin-bottom: 8px;
+  color: var(--uw-black);
+  font-family:
+    "Cambria Math",
+    "Times New Roman",
+    serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.mc-step-number {
+  display: inline-block;
+  min-width: 25px;
+  color: var(--uw-grey-dark);
+}
+
+.mc-row-step .mc-input-section {
+  padding-top: 8px;
+  padding-bottom: 5px;
+}
+
+.mc-no-steps {
+  margin: 5px 0;
+  color: #444444;
+  font-weight: 500;
+}
