@@ -218,7 +218,7 @@
     link.id = CSS_ID;
     link.rel = "stylesheet";
     link.href =
-  "https://burcukarabina.github.io/computational-math/css/calculators.css?v=5";
+  "https://burcukarabina.github.io/computational-math/css/calculators.css?v=6";
 
     document.head.appendChild(link);
   }
