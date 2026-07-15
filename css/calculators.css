@@ -1,13 +1,16 @@
 /* =====================================================
-   Matrix Calculator — Stable Centered Modal
+   Matrix Calculator
+   Draggable, resizable, and scrollable floating window
    Waterloo-inspired palette
    ===================================================== */
 
 :root {
   --uw-black: #000000;
+  --uw-near-black: #111111;
   --uw-white: #ffffff;
 
   --uw-gold-light: #f2eda8;
+  --uw-gold-hover: #f6f1c4;
   --uw-gold-dark: #eaab00;
 
   --uw-grey-light: #dfdfdf;
@@ -38,6 +41,7 @@
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
+
   transition:
     background-color 0.15s ease,
     border-color 0.15s ease,
@@ -48,7 +52,7 @@
 .matrixCalculator:hover,
 .mc-button:hover {
   border-color: var(--uw-gold-dark);
-  background: #f6f1c4;
+  background: var(--uw-gold-hover);
 }
 
 .matrixCalculator:active,
@@ -75,7 +79,11 @@
 }
 
 /* -----------------------------------------------------
-   Draggable floating calculator
+   Floating layer
+
+   This layer covers the viewport geometrically, but
+   pointer-events:none allows students to continue
+   interacting with the Möbius question.
    ----------------------------------------------------- */
 
 .mc-overlay {
@@ -84,66 +92,74 @@
   inset: 0;
   z-index: 999999;
 
-  /*
-   * The overlay spans the page, but does not block
-   * interaction with the Möbius question.
-   */
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+
   background: transparent;
+  pointer-events: none;
 }
 
 .mc-overlay-visible {
   display: block;
 }
 
+/* -----------------------------------------------------
+   Draggable, resizable calculator window
+   ----------------------------------------------------- */
+
 .mc-window {
   position: fixed;
-  top: 80px;
+  top: 70px;
   right: 24px;
 
- resize: both;
-    overflow: auto;
+  /*
+   * Initial size.
+   */
+  width: 650px;
+  height: 720px;
 
-    min-width: 450px;
-    min-height: 350px;
+  /*
+   * Resize limits.
+   */
+  min-width: 420px;
+  min-height: 350px;
 
-    max-width: 95vw;
-    max-height: 95vh;
+  max-width: calc(100vw - 30px);
+  max-height: calc(100vh - 30px);
 
   box-sizing: border-box;
   margin: 0;
   padding: 0 24px 24px;
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  border: 1px solid var(--uw-grey-medium);
-  border-radius: 9px;
-  background: var(--uw-white);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.34);
 
   /*
-   * Re-enable interaction inside the calculator.
+   * resize:both creates the lower-right resize handle.
+   * overflow:auto is required for browser resizing and
+   * provides scrolling inside the calculator.
    */
-  pointer-events: auto;
-}
-/* -----------------------------------------------------
-   Calculator window
-   ----------------------------------------------------- */
+  resize: both;
+  overflow: auto;
 
-.mc-window {
-  position: relative;
-  width: min(820px, 96%);
-  box-sizing: border-box;
-  margin: auto;
-  padding: 0 24px 24px;
-  overflow: hidden;
   border: 1px solid var(--uw-grey-medium);
   border-radius: 9px;
   background: var(--uw-white);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.34);
+
+  box-shadow:
+    0 16px 45px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+
+  /*
+   * Re-enable interaction inside the floating window.
+   */
+  pointer-events: auto;
+
+  /*
+   * Helps browsers identify this as a contained
+   * scrollable region.
+   */
+  overscroll-behavior: contain;
 }
 
-/* Single thin Waterloo gold line */
+/* Thin Waterloo gold accent at the top */
 
 .mc-window::before {
   display: block;
@@ -154,24 +170,38 @@
 }
 
 /* -----------------------------------------------------
-   Header
+   Sticky draggable header
    ----------------------------------------------------- */
 
 .mc-header {
-   position: sticky;
-    top: 0;
-    z-index: 5;
   display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+
+  /*
+   * These margins extend the header to the edges of
+   * the calculator window.
+   */
   margin: 0 -24px;
   padding: 17px 24px 15px;
+
   border-bottom: 1px solid var(--uw-gold-dark);
-  background: #111111;
+  background: var(--uw-near-black);
   color: var(--uw-white);
-     cursor: move;
+
+  /*
+   * Indicates that the header can be dragged.
+   */
+  cursor: move;
   user-select: none;
+  touch-action: none;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
 .mc-header h2 {
@@ -179,31 +209,30 @@
   color: var(--uw-white);
   font-size: 24px;
   font-weight: 700;
+  cursor: move;
 }
 
-.mc-header::after {
-  content: "Drag to move";
-  margin-left: auto;
-  color: var(--uw-grey-light);
-  font-size: 12px;
-  font-weight: 400;
-}
-.mc-header button,
-.mc-header select,
-.mc-header input {
-  cursor: default;
-}
+/*
+ * The close button should remain clickable rather
+ * than starting a drag operation.
+ */
 
 #mc-close {
   flex: 0 0 auto;
+
   border: 2px solid transparent;
   border-radius: 4px;
   background: transparent;
   color: var(--uw-white);
+
   padding: 0 6px 3px;
+
   font-size: 34px;
   line-height: 1;
+
   cursor: pointer;
+  user-select: none;
+  touch-action: auto;
 }
 
 #mc-close:hover {
@@ -217,24 +246,23 @@
   outline-offset: 2px;
 }
 
-
 /* -----------------------------------------------------
    Controls
    ----------------------------------------------------- */
 
 .mc-controls {
-   position: sticky;
-    top: 58px; 
-    z-index: 4;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+
   margin: 20px 0 16px;
   padding: 14px;
+
   border: 1px solid var(--uw-grey-light);
   border-left: 5px solid var(--uw-gold-light);
   border-radius: 5px;
+
   background: var(--mc-background);
 }
 
@@ -246,11 +274,15 @@
 .mc-controls select {
   min-width: 58px;
   margin-left: 5px;
+
   border: 1px solid var(--uw-grey-dark);
   border-radius: 4px;
+
   background: var(--uw-white);
   color: var(--uw-black);
+
   padding: 7px 9px;
+
   font-family: inherit;
   font-size: 15px;
 }
@@ -264,7 +296,7 @@
   outline-offset: 2px;
 }
 
-/* Compact dimensions */
+/* Compact dimension selector */
 
 .mc-dimensions {
   display: inline-flex;
@@ -284,11 +316,15 @@
   line-height: 1;
 }
 
+/* Show-row-operations checkbox */
+
 .mc-show-steps-label {
   display: inline-flex;
   align-items: center;
   gap: 7px;
+
   margin-left: auto;
+
   font-weight: 600;
   cursor: pointer;
 }
@@ -297,6 +333,7 @@
   width: 18px;
   height: 18px;
   margin: 0;
+
   accent-color: var(--uw-gold-dark);
   cursor: pointer;
 }
@@ -307,6 +344,7 @@
 
 .mc-input-section {
   overflow-x: auto;
+  max-width: 100%;
   padding: 18px 5px;
   text-align: center;
 }
@@ -322,12 +360,14 @@
   position: absolute;
   top: 0;
   bottom: 0;
+
   width: 12px;
   content: "";
 }
 
 .mc-matrix-brackets::before {
   left: 0;
+
   border-top: 3px solid var(--uw-black);
   border-bottom: 3px solid var(--uw-black);
   border-left: 3px solid var(--uw-black);
@@ -335,6 +375,7 @@
 
 .mc-matrix-brackets::after {
   right: 0;
+
   border-top: 3px solid var(--uw-black);
   border-right: 3px solid var(--uw-black);
   border-bottom: 3px solid var(--uw-black);
@@ -348,15 +389,21 @@
 .mc-grid input {
   width: 100%;
   min-width: 58px;
+
   box-sizing: border-box;
+
   border: 1px solid var(--uw-grey-dark);
   border-radius: 4px;
+
   background: var(--uw-white);
   color: var(--uw-black);
+
   padding: 8px 5px;
+
   text-align: center;
   font-family: inherit;
   font-size: 16px;
+
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease,
@@ -370,8 +417,11 @@
 .mc-grid input:focus {
   border-color: var(--uw-black);
   outline: none;
+
   background: #fffdf6;
-  box-shadow: 0 0 0 3px rgba(242, 237, 168, 0.85);
+
+  box-shadow:
+    0 0 0 3px rgba(242, 237, 168, 0.85);
 }
 
 /* -----------------------------------------------------
@@ -383,6 +433,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
+
   margin: 18px 0 22px;
 }
 
@@ -392,7 +443,7 @@
 }
 
 .mc-operation-buttons .mc-button:hover {
-  background: #f6f1c4;
+  background: var(--uw-gold-hover);
 }
 
 /* -----------------------------------------------------
@@ -401,6 +452,7 @@
 
 .mc-result-section {
   min-height: 100px;
+
   margin-top: 20px;
   border-top: 1px solid var(--uw-grey-light);
   padding-top: 18px;
@@ -408,22 +460,29 @@
 
 .mc-result-section h3 {
   display: inline-block;
+
   margin: 0 0 10px;
+
   border-bottom: 3px solid var(--uw-gold-light);
-  color: var(--uw-black);
   padding-bottom: 4px;
+
+  color: var(--uw-black);
   font-size: 19px;
 }
 
 #mc-result {
   box-sizing: border-box;
   min-height: 52px;
+
   border: 1px solid var(--uw-grey-light);
   border-left: 5px solid var(--uw-gold-light);
   border-radius: 5px;
+
   background: var(--mc-result-background);
   color: var(--uw-black);
+
   padding: 15px;
+
   text-align: center;
   font-weight: 600;
 }
@@ -440,40 +499,50 @@
 }
 
 /* -----------------------------------------------------
-   RREF steps
+   RREF row-operation steps
    ----------------------------------------------------- */
 
 .mc-row-steps {
   margin-top: 22px;
+
   border-top: 1px solid var(--uw-grey-light);
   padding-top: 18px;
+
   text-align: left;
 }
 
 .mc-row-steps h4 {
   display: inline-block;
+
   margin: 0 0 15px;
+
   border-bottom: 3px solid var(--uw-gold-light);
   padding-bottom: 4px;
+
   font-size: 17px;
 }
 
 .mc-row-step {
   margin: 0 0 20px;
+
   border: 1px solid var(--uw-grey-light);
   border-left: 5px solid var(--uw-gold-light);
   border-radius: 5px;
+
   background: var(--uw-white);
   padding: 12px;
 }
 
 .mc-row-step-operation {
   margin-bottom: 8px;
+
   color: var(--uw-black);
+
   font-family:
     "Cambria Math",
     "Times New Roman",
     serif;
+
   font-size: 17px;
   font-weight: 700;
 }
@@ -496,12 +565,13 @@
 }
 
 /* -----------------------------------------------------
-   Errors
+   Error display
    ----------------------------------------------------- */
 
 #mc-result.mc-error {
   border-color: #d7a4a4;
   border-left-color: var(--mc-error);
+
   background: var(--mc-error-background);
   color: var(--mc-error);
 }
@@ -512,23 +582,56 @@
 
 .mc-note {
   margin: 15px 0 0;
+
   border-left: 4px solid var(--uw-grey-medium);
+
   background: var(--mc-background);
   color: #333333;
+
   padding: 10px 12px;
+
   font-size: 13px;
   line-height: 1.5;
 }
 
 .mc-footer {
   margin-top: 20px;
-  padding-top: 17px;
+
   border-top: 1px solid var(--uw-grey-light);
+  padding-top: 17px;
+
   text-align: center;
 }
 
 /* -----------------------------------------------------
-   Responsive layout
+   Visible resize handle enhancement
+
+   Most desktop browsers already provide a handle when
+   resize:both is used. This adds a subtle visual cue in
+   the lower-right corner.
+   ----------------------------------------------------- */
+
+.mc-window::after {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+
+  width: 12px;
+  height: 12px;
+
+  border-right: 2px solid var(--uw-grey-dark);
+  border-bottom: 2px solid var(--uw-grey-dark);
+
+  content: "";
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------
+   Smaller screens
+
+   On small screens, resizing is disabled because there
+   is insufficient room to show the question and
+   calculator side by side.
    ----------------------------------------------------- */
 
 @media (max-width: 700px) {
@@ -538,19 +641,20 @@
     left: 10px;
 
     width: auto;
+    height: calc(100vh - 20px);
+
+    min-width: 0;
+    min-height: 300px;
+
+    max-width: none;
     max-height: calc(100vh - 20px);
 
     padding-right: 15px;
     padding-bottom: 18px;
     padding-left: 15px;
-  }
-}
 
-  .mc-window {
-    width: 100%;
-    padding-right: 15px;
-    padding-bottom: 18px;
-    padding-left: 15px;
+    resize: none;
+    overflow: auto;
   }
 
   .mc-window::before,
@@ -612,28 +716,8 @@
   .mc-row-step {
     padding: 9px;
   }
-}
-/* -----------------------------------------------------
-   Standalone calculator page
-   ----------------------------------------------------- */
 
-.mc-standalone-page {
-  min-height: 100vh;
-  margin: 0;
-  background: #f3f3f3;
-}
-
-.mc-standalone-page .mc-overlay {
-  display: flex;
-  position: static;
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding: 12px;
-  background: transparent;
-}
-
-.mc-standalone-page .mc-window {
-  width: min(820px, 100%);
-  margin: auto;
-  box-shadow: none;
+  .mc-window::after {
+    display: none;
+  }
 }
