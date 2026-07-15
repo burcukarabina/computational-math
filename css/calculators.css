@@ -1,22 +1,93 @@
+/* =====================================================
+   University of Waterloo Matrix Calculator
+   Official-inspired palette:
+   Gold 1: #F2EDA8
+   Gold 2: #FAE100
+   Gold 3: #FED34C
+   Gold 4: #EAAB00
+   Black:  #000000
+   Grey 1: #DFDFDF
+   Grey 2: #A2A2A2
+   Grey 3: #787878
+   White:  #FFFFFF
+   ===================================================== */
+
+:root {
+  --uw-black: #000000;
+  --uw-white: #ffffff;
+
+  --uw-gold-light: #f2eda8;
+  --uw-gold-bright: #fae100;
+  --uw-gold-primary: #fed34c;
+  --uw-gold-dark: #eaab00;
+
+  --uw-grey-light: #dfdfdf;
+  --uw-grey-medium: #a2a2a2;
+  --uw-grey-dark: #787878;
+
+  --mc-background: #f8f8f8;
+  --mc-error: #a00000;
+  --mc-error-background: #fff1f1;
+}
+
+/* -----------------------------------------------------
+   Launcher and general buttons
+   ----------------------------------------------------- */
+
 .matrixCalculator,
 .mc-button {
-  border: 1px solid #666;
-  border-radius: 6px;
-  background: #f3f3f3;
-  color: #222;
-  padding: 8px 14px;
-  font-size: 16px;
+  box-sizing: border-box;
+  border: 2px solid var(--uw-black);
+  border-radius: 5px;
+  background: var(--uw-gold-primary);
+  color: var(--uw-black);
+  padding: 9px 16px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
   cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
 }
 
 .matrixCalculator:hover,
 .mc-button:hover {
-  background: #e5e5e5;
+  background: var(--uw-gold-bright);
+  border-color: var(--uw-black);
 }
 
-.mc-secondary {
-  background: #ffffff;
+.matrixCalculator:active,
+.mc-button:active {
+  transform: translateY(1px);
 }
+
+.matrixCalculator:focus-visible,
+.mc-button:focus-visible {
+  outline: 3px solid var(--uw-black);
+  outline-offset: 3px;
+}
+
+/* Secondary buttons: Build, Clear, and Close */
+
+.mc-secondary {
+  border-color: var(--uw-grey-dark);
+  background: var(--uw-white);
+  color: var(--uw-black);
+  font-weight: 600;
+}
+
+.mc-secondary:hover {
+  border-color: var(--uw-black);
+  background: var(--uw-grey-light);
+}
+
+/* -----------------------------------------------------
+   Modal overlay
+   ----------------------------------------------------- */
 
 .mc-overlay {
   display: none;
@@ -26,7 +97,7 @@
   box-sizing: border-box;
   overflow: auto;
   padding: 28px 14px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.62);
 }
 
 .mc-overlay-visible {
@@ -35,90 +106,175 @@
   justify-content: center;
 }
 
+/* -----------------------------------------------------
+   Calculator window
+   ----------------------------------------------------- */
+
 .mc-window {
   position: relative;
-  width: min(800px, 96%);
+  width: min(820px, 96%);
   box-sizing: border-box;
   margin: auto;
-  padding: 22px;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  padding: 0 24px 24px;
+  overflow: hidden;
+  border: 1px solid var(--uw-grey-medium);
+  border-radius: 9px;
+  background: var(--uw-white);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.38);
 }
+
+/*
+  Waterloo-inspired colour bar.
+  The official Waterloo colour bar uses black with
+  four gold levels arranged from lightest to darkest.
+*/
+
+.mc-window::before {
+  display: block;
+  height: 9px;
+  margin: 0 -24px;
+  background: linear-gradient(
+    to right,
+    var(--uw-gold-light) 0%,
+    var(--uw-gold-light) 25%,
+    var(--uw-gold-bright) 25%,
+    var(--uw-gold-bright) 50%,
+    var(--uw-gold-primary) 50%,
+    var(--uw-gold-primary) 75%,
+    var(--uw-gold-dark) 75%,
+    var(--uw-gold-dark) 100%
+  );
+  content: "";
+}
+
+/* -----------------------------------------------------
+   Header
+   ----------------------------------------------------- */
 
 .mc-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  border-bottom: 1px solid #cccccc;
-  padding-bottom: 12px;
+  margin: 0 -24px;
+  padding: 17px 24px 15px;
+  border-bottom: 4px solid var(--uw-gold-dark);
+  background: var(--uw-black);
+  color: var(--uw-white);
 }
 
 .mc-header h2 {
   margin: 0;
+  color: var(--uw-white);
+  font-size: 24px;
+  font-weight: 700;
 }
 
 #mc-close {
-  border: none;
+  flex: 0 0 auto;
+  border: 2px solid transparent;
+  border-radius: 4px;
   background: transparent;
-  padding: 0 5px;
+  color: var(--uw-white);
+  padding: 0 6px 3px;
   font-size: 34px;
   line-height: 1;
   cursor: pointer;
 }
+
+#mc-close:hover {
+  border-color: var(--uw-gold-primary);
+  background: var(--uw-gold-primary);
+  color: var(--uw-black);
+}
+
+#mc-close:focus-visible {
+  outline: 3px solid var(--uw-gold-primary);
+  outline-offset: 2px;
+}
+
+/* -----------------------------------------------------
+   Dimension controls
+   ----------------------------------------------------- */
 
 .mc-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin: 18px 0;
+  margin: 20px 0 16px;
+  padding: 14px;
+  border: 1px solid var(--uw-grey-light);
+  border-left: 6px solid var(--uw-gold-dark);
+  border-radius: 5px;
+  background: var(--mc-background);
 }
 
 .mc-controls label {
-  font-weight: 600;
+  color: var(--uw-black);
+  font-weight: 700;
 }
 
 .mc-controls select {
+  min-width: 58px;
   margin-left: 5px;
-  padding: 6px;
+  border: 1px solid var(--uw-grey-dark);
+  border-radius: 4px;
+  background: var(--uw-white);
+  color: var(--uw-black);
+  padding: 7px 9px;
+  font-family: inherit;
   font-size: 15px;
 }
 
+.mc-controls select:hover {
+  border-color: var(--uw-black);
+}
+
+.mc-controls select:focus-visible {
+  outline: 3px solid var(--uw-gold-primary);
+  outline-offset: 2px;
+}
+
+/* -----------------------------------------------------
+   Matrix input
+   ----------------------------------------------------- */
+
 .mc-input-section {
   overflow-x: auto;
-  padding: 15px 5px;
+  padding: 18px 5px;
   text-align: center;
 }
 
 .mc-matrix-brackets {
   display: inline-block;
   position: relative;
-  padding: 9px 18px;
+  padding: 11px 21px;
 }
+
+/* Scalable matrix brackets */
 
 .mc-matrix-brackets::before,
 .mc-matrix-brackets::after {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 11px;
+  width: 12px;
   content: "";
 }
 
 .mc-matrix-brackets::before {
   left: 0;
-  border-top: 3px solid #333333;
-  border-bottom: 3px solid #333333;
-  border-left: 3px solid #333333;
+  border-top: 3px solid var(--uw-black);
+  border-bottom: 3px solid var(--uw-black);
+  border-left: 3px solid var(--uw-black);
 }
 
 .mc-matrix-brackets::after {
   right: 0;
-  border-top: 3px solid #333333;
-  border-right: 3px solid #333333;
-  border-bottom: 3px solid #333333;
+  border-top: 3px solid var(--uw-black);
+  border-right: 3px solid var(--uw-black);
+  border-bottom: 3px solid var(--uw-black);
 }
 
 .mc-grid {
@@ -130,58 +286,132 @@
   width: 100%;
   min-width: 58px;
   box-sizing: border-box;
-  border: 1px solid #888888;
+  border: 1px solid var(--uw-grey-dark);
   border-radius: 4px;
+  background: var(--uw-white);
+  color: var(--uw-black);
   padding: 8px 5px;
   text-align: center;
+  font-family: inherit;
   font-size: 16px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.mc-grid input:hover {
+  border-color: var(--uw-black);
 }
 
 .mc-grid input:focus {
-  outline: 2px solid #555555;
-  outline-offset: 1px;
+  border-color: var(--uw-black);
+  outline: none;
+  background: #fffdf3;
+  box-shadow:
+    0 0 0 3px var(--uw-gold-primary),
+    0 0 0 4px var(--uw-black);
 }
+
+/* -----------------------------------------------------
+   Operation buttons
+   ----------------------------------------------------- */
 
 .mc-operation-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  margin: 18px 0;
+  gap: 12px;
+  margin: 18px 0 22px;
 }
 
+.mc-operation-buttons .mc-button {
+  min-width: 135px;
+  background: var(--uw-gold-primary);
+}
+
+.mc-operation-buttons .mc-button:hover {
+  background: var(--uw-gold-bright);
+}
+
+/* -----------------------------------------------------
+   Result area
+   ----------------------------------------------------- */
+
 .mc-result-section {
-  min-height: 90px;
+  min-height: 100px;
   margin-top: 20px;
-  border-top: 1px solid #cccccc;
-  padding-top: 14px;
+  border-top: 1px solid var(--uw-grey-light);
+  padding-top: 18px;
 }
 
 .mc-result-section h3 {
+  display: inline-block;
   margin: 0 0 10px;
+  border-bottom: 4px solid var(--uw-gold-primary);
+  color: var(--uw-black);
+  padding-bottom: 4px;
+  font-size: 19px;
 }
 
 #mc-result {
+  box-sizing: border-box;
+  min-height: 52px;
+  border: 1px solid var(--uw-grey-light);
+  border-left: 6px solid var(--uw-gold-dark);
   border-radius: 5px;
-  background: #f7f7f7;
-  padding: 14px;
+  background: #fffdf3;
+  color: var(--uw-black);
+  padding: 15px;
   text-align: center;
   font-weight: 600;
 }
 
-.mc-error {
-  color: #a00000;
+/*
+  The matrix result generated by JavaScript reuses
+  .mc-matrix-brackets and .mc-input-section.
+*/
+
+.mc-result-grid {
+  color: var(--uw-black);
+  font-weight: 500;
 }
 
+/* -----------------------------------------------------
+   Error display
+   ----------------------------------------------------- */
+
+#mc-result.mc-error {
+  border-color: #d7a4a4;
+  border-left-color: var(--mc-error);
+  background: var(--mc-error-background);
+  color: var(--mc-error);
+}
+
+/* -----------------------------------------------------
+   Notes and footer
+   ----------------------------------------------------- */
+
 .mc-note {
+  margin: 15px 0 0;
+  border-left: 4px solid var(--uw-grey-medium);
+  background: var(--mc-background);
+  color: #333333;
+  padding: 10px 12px;
   font-size: 13px;
   line-height: 1.5;
 }
 
 .mc-footer {
-  margin-top: 18px;
+  margin-top: 20px;
+  padding-top: 17px;
+  border-top: 1px solid var(--uw-grey-light);
   text-align: center;
 }
+
+/* -----------------------------------------------------
+   Responsive layout
+   ----------------------------------------------------- */
 
 @media (max-width: 600px) {
   .mc-overlay {
@@ -190,7 +420,24 @@
 
   .mc-window {
     width: 100%;
-    padding: 15px;
+    padding-right: 15px;
+    padding-bottom: 18px;
+    padding-left: 15px;
+  }
+
+  .mc-window::before,
+  .mc-header {
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .mc-header {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .mc-header h2 {
+    font-size: 21px;
   }
 
   .mc-controls {
@@ -204,6 +451,10 @@
     box-sizing: border-box;
   }
 
+  .mc-controls select {
+    float: right;
+  }
+
   .mc-grid {
     gap: 5px;
   }
@@ -211,5 +462,13 @@
   .mc-grid input {
     min-width: 52px;
     padding: 7px 3px;
+  }
+
+  .mc-operation-buttons {
+    flex-direction: column;
+  }
+
+  .mc-operation-buttons .mc-button {
+    width: 100%;
   }
 }
