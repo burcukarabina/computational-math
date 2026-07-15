@@ -1,1 +1,159 @@
 
+.mcx-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 24px 12px;
+  box-sizing: border-box;
+}
+
+.mcx-modal--open {
+  display: block;
+}
+
+.mcx-modal__panel {
+  width: min(850px, 100%);
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 22px;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+}
+
+.mcx-modal__title {
+  margin: 0 48px 18px 0;
+}
+
+.mcx-modal__x {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mcx-controls,
+.mcx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.mcx-controls {
+  margin-bottom: 16px;
+}
+
+.mcx-controls label {
+  font-weight: 600;
+}
+
+.mcx-controls select {
+  margin-left: 4px;
+  padding: 6px;
+}
+
+.mcx-button,
+.matrixCalculator,
+[data-matrix-calculator] {
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 8px 14px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.mcx-button:hover,
+.matrixCalculator:hover,
+[data-matrix-calculator]:hover {
+  background: #e8e8e8;
+}
+
+.mcx-button--secondary {
+  background: #ffffff;
+}
+
+.mcx-grid-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.mcx-grid {
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 6px;
+}
+
+.mcx-grid input {
+  width: 72px;
+  padding: 7px 5px;
+  text-align: center;
+  border: 1px solid #888;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.mcx-actions {
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.mcx-result {
+  border-top: 1px solid #cccccc;
+  margin-top: 18px;
+  padding-top: 14px;
+}
+
+.mcx-result__message {
+  text-align: center;
+  font-weight: 700;
+}
+
+.mcx-result__message--error {
+  color: #a00000;
+}
+
+.mcx-result-table {
+  margin: 10px auto;
+  border-collapse: separate;
+  border-spacing: 10px 5px;
+}
+
+.mcx-result-table td {
+  min-width: 45px;
+  padding: 5px;
+  text-align: center;
+}
+
+.mcx-note {
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.mcx-footer {
+  text-align: center;
+  margin-top: 18px;
+}
+
+@media (max-width: 600px) {
+  .mcx-modal {
+    padding: 10px 6px;
+  }
+
+  .mcx-modal__panel {
+    padding: 16px;
+  }
+
+  .mcx-grid input {
+    width: 58px;
+  }
+}
