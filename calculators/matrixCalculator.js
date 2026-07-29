@@ -190,6 +190,37 @@
     isZero() {
       return this.numerator === 0n;
     }
+    equals(other) {
+  return (
+    this.numerator === other.numerator &&
+    this.denominator === other.denominator
+  );
+}
+
+isOne() {
+  return (
+    this.numerator === 1n &&
+    this.denominator === 1n
+  );
+}
+
+isNegativeOne() {
+  return (
+    this.numerator === -1n &&
+    this.denominator === 1n
+  );
+}
+
+isNegative() {
+  return this.numerator < 0n;
+}
+
+absoluteValue() {
+  return new Fraction(
+    Fraction.absoluteValue(this.numerator),
+    this.denominator
+  );
+}
 
     toString() {
       if (this.denominator === 1n) {
@@ -326,31 +357,39 @@
           </div>
         </div>
 
-        <div class="mc-operation-buttons">
-          <button
-            type="button"
-            id="mc-rref"
-            class="mc-button"
-          >
-            RREF
-          </button>
+      <div class="mc-operation-buttons">
+  <button
+    type="button"
+    id="mc-rref"
+    class="mc-button"
+  >
+    RREF
+  </button>
 
-          <button
-            type="button"
-            id="mc-determinant"
-            class="mc-button"
-          >
-            Determinant
-          </button>
+  <button
+    type="button"
+    id="mc-determinant"
+    class="mc-button"
+  >
+    Determinant
+  </button>
 
-          <button
-            type="button"
-            id="mc-inverse"
-            class="mc-button"
-          >
-            Inverse
-          </button>
-        </div>
+  <button
+    type="button"
+    id="mc-inverse"
+    class="mc-button"
+  >
+    Inverse
+  </button>
+
+  <button
+    type="button"
+    id="mc-characteristic"
+    class="mc-button"
+  >
+    Characteristic Polynomial
+  </button>
+</div>
 
         <div class="mc-result-section">
           <h3>Result</h3>
@@ -986,6 +1025,571 @@
     return right;
   }
 
+
+  /*
+ * Characteristic polynomial
+ *
+ * Convention:
+ * p_A(lambda) = det(lambda I - A)
+ *
+ * Exact support:
+ * 1x1, 2x2, and 3x3 matrices.
+ */
+
+function characteristicPolynomialCoefficients(matrix) {
+  requireSquareMatrix(
+    matrix,
+    "The characteristic polynomial"
+  );
+
+  const size = matrix.length;
+
+  if (size > 3) {
+    throw new Error(
+      "Characteristic polynomial is currently supported " +
+      "for matrices up to 3 × 3."
+    );
+  }
+
+  if (size === 1) {
+    /*
+     * lambda - a
+     */
+    return [
+      Fraction.one(),
+      matrix[0][0].negate()
+    ];
+  }
+
+  if (size === 2) {
+    const a = matrix[0][0];
+    const b = matrix[0][1];
+    const c = matrix[1][0];
+    const d = matrix[1][1];
+
+    const trace = a.add(d);
+
+    const determinant =
+      a.multiply(d).subtract(
+        b.multiply(c)
+      );
+
+    /*
+     * lambda^2 - trace(A)lambda + det(A)
+     */
+    return [
+      Fraction.one(),
+      trace.negate(),
+      determinant
+    ];
+  }
+
+  /*
+   * For a 3x3 matrix:
+   *
+   * p(lambda)
+   * = lambda^3
+   * - tr(A) lambda^2
+   * + c_2 lambda
+   * - det(A),
+   *
+   * where c_2 is the sum of the three principal
+   * 2x2 minors.
+   */
+
+  const a = matrix[0][0];
+  const b = matrix[0][1];
+  const c = matrix[0][2];
+
+  const d = matrix[1][0];
+  const e = matrix[1][1];
+  const f = matrix[1][2];
+
+  const g = matrix[2][0];
+  const h = matrix[2][1];
+  const i = matrix[2][2];
+
+  const trace =
+    a.add(e).add(i);
+
+  const principalMinor1 =
+    a.multiply(e).subtract(
+      b.multiply(d)
+    );
+
+  const principalMinor2 =
+    a.multiply(i).subtract(
+      c.multiply(g)
+    );
+
+  const principalMinor3 =
+    e.multiply(i).subtract(
+      f.multiply(h)
+    );
+
+  const secondCoefficient =
+    principalMinor1
+      .add(principalMinor2)
+      .add(principalMinor3);
+
+  const determinant =
+    calculateDeterminant(matrix);
+
+  return [
+    Fraction.one(),
+    trace.negate(),
+    secondCoefficient,
+    determinant.negate()
+  ];
+}
+
+/*
+ * Evaluate a polynomial at x.
+ *
+ * Coefficients are stored in descending order.
+ * For example:
+ *
+ * [1, -5, 6]
+ *
+ * represents lambda^2 - 5lambda + 6.
+ */
+
+function evaluatePolynomial(
+  coefficients,
+  x
+) {
+  let result = Fraction.zero();
+
+  coefficients.forEach(function (
+    coefficient
+  ) {
+    result =
+      result.multiply(x).add(coefficient);
+  });
+
+  return result;
+}
+
+/*
+ * Synthetic division by lambda - root.
+ */
+
+function syntheticDivide(
+  coefficients,
+  root
+) {
+  const quotient = [];
+  let current = coefficients[0];
+
+  quotient.push(current);
+
+  for (
+    let index = 1;
+    index < coefficients.length - 1;
+    index++
+  ) {
+    current =
+      coefficients[index].add(
+        current.multiply(root)
+      );
+
+    quotient.push(current);
+  }
+
+  const remainder =
+    coefficients[
+      coefficients.length - 1
+    ].add(
+      current.multiply(root)
+    );
+
+  if (!remainder.isZero()) {
+    throw new Error(
+      "Polynomial division produced a nonzero remainder."
+    );
+  }
+
+  return quotient;
+}
+
+function bigintGCD(a, b) {
+  a = a < 0n ? -a : a;
+  b = b < 0n ? -b : b;
+
+  while (b !== 0n) {
+    const remainder = a % b;
+    a = b;
+    b = remainder;
+  }
+
+  return a;
+}
+
+function bigintLCM(a, b) {
+  if (a === 0n || b === 0n) {
+    return 0n;
+  }
+
+  return (
+    (a / bigintGCD(a, b)) * b
+  );
+}
+
+function positiveDivisors(value) {
+  let number =
+    value < 0n ? -value : value;
+
+  if (number === 0n) {
+    return [0n];
+  }
+
+  const divisors = [];
+
+  for (
+    let divisor = 1n;
+    divisor * divisor <= number;
+    divisor++
+  ) {
+    if (number % divisor === 0n) {
+      divisors.push(divisor);
+
+      const paired =
+        number / divisor;
+
+      if (paired !== divisor) {
+        divisors.push(paired);
+      }
+    }
+  }
+
+  return divisors;
+}
+
+/*
+ * Convert rational coefficients into proportional
+ * integer coefficients by clearing denominators.
+ */
+
+function clearPolynomialDenominators(
+  coefficients
+) {
+  let commonDenominator = 1n;
+
+  coefficients.forEach(function (
+    coefficient
+  ) {
+    commonDenominator =
+      bigintLCM(
+        commonDenominator,
+        coefficient.denominator
+      );
+  });
+
+  return coefficients.map(function (
+    coefficient
+  ) {
+    return (
+      coefficient.numerator *
+      (
+        commonDenominator /
+        coefficient.denominator
+      )
+    );
+  });
+}
+
+/*
+ * Rational Root Theorem.
+ *
+ * For a monic polynomial with rational coefficients,
+ * clear denominators first. Candidate roots are p/q,
+ * where p divides the constant term and q divides the
+ * leading coefficient.
+ */
+
+function findRationalRoot(
+  coefficients
+) {
+  const degree =
+    coefficients.length - 1;
+
+  if (degree < 1) {
+    return null;
+  }
+
+  const integerCoefficients =
+    clearPolynomialDenominators(
+      coefficients
+    );
+
+  const leading =
+    integerCoefficients[0];
+
+  const constant =
+    integerCoefficients[
+      integerCoefficients.length - 1
+    ];
+
+  if (constant === 0n) {
+    return Fraction.zero();
+  }
+
+  const numeratorCandidates =
+    positiveDivisors(constant);
+
+  const denominatorCandidates =
+    positiveDivisors(leading);
+
+  for (
+    let pIndex = 0;
+    pIndex < numeratorCandidates.length;
+    pIndex++
+  ) {
+    for (
+      let qIndex = 0;
+      qIndex < denominatorCandidates.length;
+      qIndex++
+    ) {
+      const numerator =
+        numeratorCandidates[pIndex];
+
+      const denominator =
+        denominatorCandidates[qIndex];
+
+      const positiveCandidate =
+        new Fraction(
+          numerator,
+          denominator
+        );
+
+      if (
+        evaluatePolynomial(
+          coefficients,
+          positiveCandidate
+        ).isZero()
+      ) {
+        return positiveCandidate;
+      }
+
+      const negativeCandidate =
+        positiveCandidate.negate();
+
+      if (
+        evaluatePolynomial(
+          coefficients,
+          negativeCandidate
+        ).isZero()
+      ) {
+        return negativeCandidate;
+      }
+    }
+  }
+
+  return null;
+}
+
+/*
+ * Return a readable factor lambda - root.
+ */
+
+function linearFactorToHTML(root) {
+  if (root.isZero()) {
+    return "&lambda;";
+  }
+
+  if (root.isNegative()) {
+    return (
+      "(&lambda; + " +
+      escapeHTML(
+        root.absoluteValue().toString()
+      ) +
+      ")"
+    );
+  }
+
+  return (
+    "(&lambda; &minus; " +
+    escapeHTML(root.toString()) +
+    ")"
+  );
+}
+
+function formatPolynomialTerm(
+  coefficient,
+  degree,
+  isFirstTerm
+) {
+  if (coefficient.isZero()) {
+    return "";
+  }
+
+  const isNegative =
+    coefficient.isNegative();
+
+  const absolute =
+    coefficient.absoluteValue();
+
+  let sign = "";
+
+  if (isFirstTerm) {
+    sign = isNegative ? "&minus;" : "";
+  } else {
+    sign = isNegative
+      ? " &minus; "
+      : " + ";
+  }
+
+  let variablePart = "";
+
+  if (degree === 1) {
+    variablePart = "&lambda;";
+  } else if (degree > 1) {
+    variablePart =
+      "&lambda;<sup>" +
+      degree +
+      "</sup>";
+  }
+
+  let coefficientPart = "";
+
+  if (
+    degree === 0 ||
+    !absolute.isOne()
+  ) {
+    coefficientPart =
+      escapeHTML(
+        absolute.toString()
+      );
+  }
+
+  if (
+    degree > 0 &&
+    coefficientPart !== ""
+  ) {
+    coefficientPart += "";
+  }
+
+  return (
+    sign +
+    coefficientPart +
+    variablePart
+  );
+}
+
+function polynomialToHTML(
+  coefficients
+) {
+  const degree =
+    coefficients.length - 1;
+
+  let html = "";
+  let firstTerm = true;
+
+  coefficients.forEach(function (
+    coefficient,
+    index
+  ) {
+    const currentDegree =
+      degree - index;
+
+    const term =
+      formatPolynomialTerm(
+        coefficient,
+        currentDegree,
+        firstTerm
+      );
+
+    if (term !== "") {
+      html += term;
+      firstTerm = false;
+    }
+  });
+
+  return html || "0";
+}
+
+/*
+ * Factor a polynomial over the rational numbers.
+ *
+ * Linear rational factors are extracted repeatedly.
+ * Any remaining irreducible quadratic or cubic is
+ * displayed as one factor.
+ */
+
+function factorPolynomialToHTML(
+  originalCoefficients
+) {
+  let coefficients =
+    originalCoefficients.slice();
+
+  const factors = [];
+
+  while (
+    coefficients.length > 2
+  ) {
+    const root =
+      findRationalRoot(coefficients);
+
+    if (root === null) {
+      break;
+    }
+
+    factors.push(
+      linearFactorToHTML(root)
+    );
+
+    coefficients =
+      syntheticDivide(
+        coefficients,
+        root
+      );
+  }
+
+  /*
+   * Handle the remaining linear polynomial.
+   */
+
+  if (coefficients.length === 2) {
+    const leading =
+      coefficients[0];
+
+    const constant =
+      coefficients[1];
+
+    const root =
+      constant
+        .negate()
+        .divide(leading);
+
+    if (!leading.isOne()) {
+      factors.push(
+        escapeHTML(
+          leading.toString()
+        )
+      );
+    }
+
+    factors.push(
+      linearFactorToHTML(root)
+    );
+  } else if (
+    coefficients.length > 1
+  ) {
+    /*
+     * Remaining quadratic or cubic has no rational
+     * linear root and is irreducible over Q according
+     * to the rational-root search.
+     */
+
+    factors.push(
+      "(" +
+      polynomialToHTML(coefficients) +
+      ")"
+    );
+  }
+
+  return factors.join("");
+}
   /*
    * Result display
    */
@@ -1031,6 +1635,42 @@
 
     return html;
   }
+
+  function showCharacteristicPolynomial(
+  coefficients
+) {
+  const result =
+    document.getElementById("mc-result");
+
+  result.classList.remove("mc-error");
+
+  const expanded =
+    polynomialToHTML(coefficients);
+
+  const factored =
+    factorPolynomialToHTML(
+      coefficients
+    );
+
+  result.innerHTML =
+    '<div class="mc-result-title">' +
+      "Characteristic Polynomial" +
+    "</div>" +
+
+    '<div class="mc-polynomial-convention">' +
+      "p<sub>A</sub>(&lambda;) = " +
+      "det(&lambda;I &minus; A)" +
+    "</div>" +
+
+    '<div class="mc-polynomial-factored">' +
+      factored +
+    "</div>" +
+
+    '<div class="mc-polynomial-expanded">' +
+      "<strong>Expanded form:</strong> " +
+      expanded +
+    "</div>";
+}
 
   function showMessage(
     message,
@@ -1201,7 +1841,30 @@
       );
     }
   }
+function handleCharacteristicPolynomial() {
+  try {
+    const matrix = readMatrix();
 
+    requireSquareMatrix(
+      matrix,
+      "The characteristic polynomial"
+    );
+
+    const coefficients =
+      characteristicPolynomialCoefficients(
+        matrix
+      );
+
+    showCharacteristicPolynomial(
+      coefficients
+    );
+  } catch (error) {
+    showMessage(
+      error.message,
+      true
+    );
+  }
+}
   /*
    * Open, close, and event handling
    */
@@ -1420,6 +2083,15 @@
         }
       );
   }
+
+  document
+  .getElementById(
+    "mc-characteristic"
+  )
+  .addEventListener(
+    "click",
+    handleCharacteristicPolynomial
+  );
 
   function bindLaunchButtons() {
     document
