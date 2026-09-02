@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A computational activity exploring the Squeeze Theorem numerically and graphically using Python.">
+  <title>Exploring the Squeeze Theorem | Computational Math</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --ink: #1f2937;
+      --muted: #5f6b7a;
+      --line: #d9dee7;
+      --panel: #f7f9fc;
+      --code-bg: #f4f6f8;
+      --accent: #7a0019;
+      --accent-dark: #520011;
+      --accent-soft: #fff4f6;
+      --turn-bg: #fff9e8;
+      --question-bg: #fbfbfc;
+      --reflection-bg: #f4f8ff;
+      --connection-bg: #f4fbf7;
+      --max-width: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    a:hover {
+      color: var(--accent-dark);
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .site-header-inner {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 16px;
+    }
+
+    .site-title {
+      margin: 0;
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-weight: 750;
+      letter-spacing: -0.02em;
+    }
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 14px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a[aria-current="page"],
+    .nav a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    main {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 44px 0 64px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      scroll-margin-top: 24px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    h2 {
+      margin: 46px 0 14px;
+      font-size: clamp(1.45rem, 3vw, 2rem);
+    }
+
+    h3 {
+      margin: 30px 0 10px;
+      font-size: 1.2rem;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    ol,
+    ul {
+      margin-top: 8px;
+    }
+
+    .intro > p:first-of-type {
+      max-width: 850px;
+      color: #374151;
+      font-size: 1.08rem;
+    }
+
+    blockquote {
+      margin: 18px 0;
+      padding: 12px 18px;
+      border-left: 4px solid #b9c1cc;
+      background: var(--panel);
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    .question,
+    .your-turn {
+      margin: 26px 0;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .question {
+      background: var(--question-bg);
+      border-left: 5px solid #6b7280;
+    }
+
+    .your-turn {
+      background: var(--turn-bg);
+      border-left: 5px solid #d99a00;
+    }
+
+    .question h3,
+    .your-turn h2 {
+      margin-top: 0;
+    }
+
+    .code-block {
+      margin: 18px 0 24px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .code-label {
+      padding: 8px 14px;
+      background: #eef1f5;
+      border-bottom: 1px solid var(--line);
+      color: #4b5563;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      background: var(--code-bg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+                   Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.93rem;
+      line-height: 1.55;
+      tab-size: 4;
+    }
+
+    .output pre {
+      background: #fff;
+      color: #1f2937;
+    }
+
+    .figure {
+      margin: 28px auto 36px;
+      text-align: center;
+    }
+
+    .figure img {
+      display: block;
+      width: min(100%, 790px);
+      height: auto;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .figure figcaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .answer-label {
+      display: block;
+      margin-top: 16px;
+      color: #4b5563;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    textarea.answer {
+      display: block;
+      width: 100%;
+      min-height: 95px;
+      margin-top: 7px;
+      padding: 12px 14px;
+      border: 1px solid #bfc6d1;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 400;
+      color: var(--ink);
+      background: #fff;
+      resize: vertical;
+    }
+
+    textarea.answer:focus {
+      outline: 3px solid rgba(122, 0, 25, 0.15);
+      border-color: var(--accent);
+    }
+
+    .mini-response {
+      margin-top: 18px;
+    }
+
+    code:not(pre code) {
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      background: #f0f2f5;
+      font-size: 0.92em;
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-inner {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 34px;
+    }
+
+    .note,
+    .theorem {
+      margin: 26px 0;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .note {
+      background: var(--accent-soft);
+      border-left: 5px solid var(--accent);
+    }
+
+    .theorem {
+      background: #f1f7ff;
+      border-left: 5px solid #4776a8;
+    }
+
+    .note h2,
+    .theorem h2 {
+      margin-top: 0;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding-top: 30px;
+      }
+
+      .question,
+      .your-turn,
+      .note,
+      .theorem {
+        padding: 16px;
+      }
+
+      pre {
+        font-size: 0.84rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <p class="site-title">
+      Computational Activities for First-Year University Mathematics
+    </p>
+
+    <p class="site-subtitle">
+      University of Waterloo · Department of Mathematics
+    </p>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html">Welcome</a>
+      <a href="calculus.html" aria-current="page">Calculus</a>
+      <a href="linearalgebra.html">Linear Algebra</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="intro">
+
+<h1>Exploring the Squeeze Theorem</h1>
+
+<p>
+  In the Numerical Exploration of Limits: Functions activity, we explored
+  limits by looking at values of a function near a point.
+</p>
+
+<p>
+  In this activity, we will study a very useful tool for limits called the
+  <strong>Squeeze Theorem</strong>.
+</p>
+
+<p>The main idea is:</p>
+
+<blockquote>
+  <p>
+    If a function is trapped between two other functions, and the two outside
+    functions approach the same value, then the middle function must approach
+    that same value too.
+  </p>
+</blockquote>
+
+<p>
+  We will use tables and graphs to build intuition before stating the theorem
+  formally.
+</p>
+
+</section>
+
+
+<h2>Two functions that approach the same value</h2>
+
+<p>Let's start with two simple functions:</p>
+
+<p>
+$$
+g(x)=-x^2+1
+$$
+</p>
+
+<p>and</p>
+
+<p>
+$$
+h(x)=x^2+1.
+$$
+</p>
+
+<p>
+Both functions approach $1$ as $x\to 0$. In other words,
+$$
+\lim_{x \to 0} (-x^2+1)
+=
+\lim_{x \to 0} (x^2+1)
+=
+1.
+$$
+</p>
+
+<p>Let's check this numerically.</p>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>x_values = [-0.15, -0.015, -0.0015, -0.00015,
+            0.00015, 0.0015, 0.015, 0.15]
+
+for x in x_values:
+    g = -x**2 + 1
+    h = x**2 + 1
+    print(f"x = {x:.6f}   -x^2+1 = {g:.6f}   x^2+1 = {h:.6f}")</code></pre>
+
+</section>
+
+
+<section class="code-block output" aria-label="Output">
+<div class="code-label">Output</div>
+
+<pre>x = -0.150000   -x^2+1 = 0.977500   x^2+1 = 1.022500
+x = -0.015000   -x^2+1 = 0.999775   x^2+1 = 1.000225
+x = -0.001500   -x^2+1 = 0.999998   x^2+1 = 1.000002
+x = -0.000150   -x^2+1 = 1.000000   x^2+1 = 1.000000
+x = 0.000150    -x^2+1 = 1.000000   x^2+1 = 1.000000
+x = 0.001500    -x^2+1 = 0.999998   x^2+1 = 1.000002
+x = 0.015000    -x^2+1 = 0.999775   x^2+1 = 1.000225
+x = 0.150000    -x^2+1 = 0.977500   x^2+1 = 1.022500</pre>
+
+</section>
+
+<p>
+From our calculations above, we see that as $x$ gets close to $0$, both
+$-x^2+1$ and $x^2+1$ appear to approach $1$.
+</p>
+
+
+<h2>Graphing the outside functions</h2>
+
+<p>Now let's graph the two functions:</p>
+
+<p>
+$$
+y=-x^2+1
+$$
+</p>
+
+<p>and</p>
+
+<p>
+$$
+y=x^2+1.
+$$
+</p>
+
+<p>Notice the region between them.</p>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>import matplotlib.pyplot as plt
+
+x_values = [-1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,
+            0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+
+upper_values = []
+lower_values = []
+
+for x in x_values:
+    upper_values.append(x**2 + 1)
+    lower_values.append(-x**2 + 1)
+
+plt.plot(x_values, upper_values, label="h(x) = x^2+1")
+plt.plot(x_values, lower_values, label="g(x) = -x^2+1")
+
+plt.axvline(x=0, linestyle="--")
+plt.axhline(y=0, linestyle="--")
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("The functions y = -x^2+1 and y = x^2+1")
+plt.grid(True)
+plt.legend()
+plt.show()</code></pre>
+
+</section>
+
+
+<figure class="figure">
+  <img
+    src="squeeze-outside-functions.png"
+    alt="Graph of y equals negative x squared plus 1 and y equals x squared plus 1, showing the narrowing region between the curves near x equals 0.">
+</figure>
+
+
+<section class="question">
+
+<p>
+What happens to the space between the two curves as $x$ gets closer to $0$?
+</p>
+
+<label class="answer-label">
+  Your Answer
+  <textarea class="answer" aria-label="Your answer"></textarea>
+</label>
+
+</section>
+
+
+<h2>Find a function trapped between them</h2>
+
+<p>Now consider the function</p>
+
+<p>
+$$
+f(x)=x^2\sin\left(\frac{1}{x}\right)+1.
+$$
+</p>
+
+<p>
+This function oscillates because of the $\sin(1/x)$ part.
+</p>
+
+<p>
+However, it is multiplied by $x^2$, which becomes very small near $0$.
+But then we add $1$ to it, so it should get close to $1$.
+</p>
+
+<p>Let's compute some values.</p>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>import math
+
+x_values = [-0.5, -0.2, -0.1, -0.05, -0.01,
+             0.01, 0.05, 0.1, 0.2, 0.5]
+
+for x in x_values:
+    y = x**2 * math.sin(1/x) + 1
+    print("x =", x, "   f(x) =", y)</code></pre>
+
+</section>
+
+
+<section class="code-block output" aria-label="Output">
+<div class="code-label">Output</div>
+
+<pre>x = -0.5    f(x) = 0.7726756432935795
+x = -0.2    f(x) = 1.0383569709865255
+x = -0.1    f(x) = 1.0054402111088936
+x = -0.05   f(x) = 0.9977176368731809
+x = -0.01   f(x) = 1.000050636564111
+x = 0.01    f(x) = 0.999949363435889
+x = 0.05    f(x) = 1.0022823631268192
+x = 0.1     f(x) = 0.9945597888911063
+x = 0.2     f(x) = 0.9616430290134744
+x = 0.5     f(x) = 1.2273243567064205</pre>
+
+</section>
+
+<p>
+As $x$ gets close to $0$, the value of
+$x^2\sin(1/x)+1$ appears to approach $1$, as we predicted.
+</p>
+
+
+<h2>Comparing all three functions</h2>
+
+<p>We will now compare:</p>
+
+<p>
+$$
+g(x)=-x^2+1,
+$$
+</p>
+
+<p>
+$$
+f(x)=x^2\sin\left(\frac{1}{x}\right)+1,
+$$
+</p>
+
+<p>and</p>
+
+<p>
+$$
+h(x)=x^2+1.
+$$
+</p>
+
+<p>
+The goal is to see whether the middle function stays between the other two
+functions.
+</p>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>import math
+import matplotlib.pyplot as plt
+
+x_values = []
+
+# Use negative x-values first
+x = -1
+while x &lt; -0.01:
+    x_values.append(x)
+    x = x + 0.001
+
+# Use positive x-values next
+x = 0.01
+while x &lt;= 1:
+    x_values.append(x)
+    x = x + 0.001
+
+upper_values = []
+middle_values = []
+lower_values = []
+
+for x in x_values:
+    upper_values.append(x**2 + 1)
+    middle_values.append(x**2 * math.sin(1/x) + 1)
+    lower_values.append(-x**2 + 1)
+
+plt.plot(x_values, upper_values, label="h(x) = x^2+1")
+plt.plot(x_values, middle_values, label="f(x) = x^2 sin(1/x)+1")
+plt.plot(x_values, lower_values, label="g(x) = -x^2+1")
+
+plt.axvline(x=0, linestyle="--")
+plt.axhline(y=0, linestyle="--")
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("A function squeezed between two functions")
+plt.grid(True)
+plt.legend()
+plt.show()</code></pre>
+
+</section>
+
+
+<figure class="figure">
+  <img
+    src="squeeze-three-functions.png"
+    alt="Graph comparing the upper function x squared plus 1, the oscillating middle function x squared sine of 1 over x plus 1, and the lower function negative x squared plus 1.">
+</figure>
+
+<p>
+As you can see from the graph above, the oscillating curve appears to stay
+between $y=-x^2+1$ and $y=x^2+1$.
+</p>
+
+
+<h2>Zooming in near $x=0$</h2>
+
+<p>Let's zoom in closer to $x=0$.</p>
+
+<p>
+This will help us see what happens to the oscillations near the point where
+we are taking the limit.
+</p>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>import math
+import matplotlib.pyplot as plt
+
+x_values = []
+
+# Negative x-values close to 0
+x = -0.2
+while x &lt; -0.001:
+    x_values.append(x)
+    x = x + 0.0002
+
+# Positive x-values close to 0
+x = 0.001
+while x &lt;= 0.2:
+    x_values.append(x)
+    x = x + 0.0002
+
+upper_values = []
+middle_values = []
+lower_values = []
+
+for x in x_values:
+    upper_values.append(x**2 + 1)
+    middle_values.append(x**2 * math.sin(1/x) + 1)
+    lower_values.append(-x**2 + 1)
+
+plt.plot(x_values, upper_values, label="h(x) = x^2+1")
+plt.plot(x_values, middle_values, label="f(x) = x^2 sin(1/x)+1")
+plt.plot(x_values, lower_values, label="g(x) = -x^2+1")
+
+plt.axvline(x=0, linestyle="--")
+plt.axhline(y=0, linestyle="--")
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("Zoomed in near x = 0")
+plt.grid(True)
+plt.legend()
+plt.show()</code></pre>
+
+</section>
+
+
+<figure class="figure">
+  <img
+    src="squeeze-zoom.png"
+    alt="Zoomed graph near x equals 0 showing the oscillating middle function squeezed between the two outer functions.">
+</figure>
+
+<p>
+As we zoom in near $x=0$, we see that the oscillations get smaller,
+suggesting the values of $x^2\sin(1/x)+1$ get close to the fixed value $1$.
+</p>
+
+
+<h2>A table showing the squeeze</h2>
+
+<p>Now we will make a table showing all three functions:</p>
+
+<p>
+$$
+-x^2+1,\qquad
+x^2\sin(1/x)+1,\qquad
+x^2+1.
+$$
+</p>
+
+<p>We want to check whether</p>
+
+<p>
+$$
+-x^2+1
+\leq
+x^2\sin(1/x)+1
+\leq
+x^2+1.
+$$
+</p>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>import math
+
+x_values = [0.5, 0.2, 0.1, 0.05, 0.01, 0.005, 0.001]
+
+print("x        -x^2+1        x^2 sin(1/x)+1       x^2+1")
+
+for x in x_values:
+    lower = -x**2 + 1
+    middle = x**2 * math.sin(1/x) + 1
+    upper = x**2 + 1
+
+    print(f"{x:.6f}     {lower:.6f}     {middle:.6f}     {upper:.6f}")</code></pre>
+
+</section>
+
+
+<section class="code-block output" aria-label="Output">
+<div class="code-label">Output</div>
+
+<pre>x        -x^2+1        x^2 sin(1/x)+1       x^2+1
+0.500000     0.750000     1.227324     1.250000
+0.200000     0.960000     0.961643     1.040000
+0.100000     0.990000     0.994560     1.010000
+0.050000     0.997500     1.002282     1.002500
+0.010000     0.999900     0.999949     1.000100
+0.005000     0.999975     0.999978     1.000025
+0.001000     0.999999     1.000001     1.000001</pre>
+
+</section>
+
+
+<section class="question">
+
+<p>
+For the values in the table, is the middle value always between the lower
+value and the upper value?
+</p>
+
+<label class="answer-label">
+  Your Answer
+  <textarea class="answer" aria-label="Your answer"></textarea>
+</label>
+
+</section>
+
+
+<h2>Does the inequality hold in general?</h2>
+
+<p>
+We know that for every real number $t$, the values of $\sin(t)$ oscillate
+between $-1$ and $1$, so we can write
+</p>
+
+<p>
+$$
+-1\leq \sin(t)\leq 1.
+$$
+</p>
+
+<p>So for $t=1/x$, when $x\neq 0$, we have</p>
+
+<p>
+$$
+-1\leq \sin(1/x)\leq 1.
+$$
+</p>
+
+<p>If we multiply all parts by $x^2$, we get</p>
+
+<p>
+$$
+-x^2
+\leq
+x^2\sin(1/x)
+\leq
+x^2.
+$$
+</p>
+
+<p>Adding $1$ gives</p>
+
+<p>
+$$
+-x^2+1
+\leq
+x^2\sin(1/x)+1
+\leq
+x^2+1.
+$$
+</p>
+
+<p>This means</p>
+
+<p>
+$$
+g(x)\leq f(x)\leq h(x),
+$$
+</p>
+
+<p>where</p>
+
+<p>
+$$
+g(x)=-x^2+1,\qquad
+f(x)=x^2\sin(1/x)+1,\qquad
+h(x)=x^2+1.
+$$
+</p>
+
+
+<section class="note">
+
+<h2>The open interval condition!</h2>
+
+<p>A very important detail:</p>
+
+<p>For the Squeeze Theorem, we need</p>
+
+<p>
+$$
+g(x)\leq f(x)\leq h(x)
+$$
+</p>
+
+<p>
+to hold on an <strong>open interval around $a$</strong>, possibly excluding
+$a$ itself.
+</p>
+
+<p>In this example, $a=0$.</p>
+
+<p>The function</p>
+
+<p>
+$$
+x^2\sin(1/x)+1
+$$
+</p>
+
+<p>is not defined at $x=0$, but that is okay.</p>
+
+<p>
+Limits are about what happens <strong>near</strong> the point, not necessarily
+at the point.
+</p>
+
+<p>So we care that</p>
+
+<p>
+$$
+-x^2+1
+\leq
+x^2\sin(1/x)+1
+\leq
+x^2+1
+$$
+</p>
+
+<p>
+holds for $x\neq 0$ in an open interval around $0$.
+</p>
+
+</section>
+
+
+<section class="theorem">
+
+<h2>The Squeeze Theorem</h2>
+
+<p>Here is the formal idea.</p>
+
+<p>
+Suppose there is an open interval containing $a$ such that
+</p>
+
+<p>
+$$
+g(x)\leq f(x)\leq h(x)
+$$
+</p>
+
+<p>
+for all $x\neq a$ in that interval.
+</p>
+
+<p>If</p>
+
+<p>
+$$
+\lim_{x\to a}g(x)=L
+$$
+</p>
+
+<p>and</p>
+
+<p>
+$$
+\lim_{x\to a}h(x)=L,
+$$
+</p>
+
+<p>then</p>
+
+<p>
+$$
+\lim_{x\to a}f(x)=L.
+$$
+</p>
+
+<p>In our example,</p>
+
+<p>
+$$
+\lim_{x\to 0}(-x^2+1)=1
+$$
+</p>
+
+<p>and</p>
+
+<p>
+$$
+\lim_{x\to 0}(x^2+1)=1.
+$$
+</p>
+
+<p>Since</p>
+
+<p>
+$$
+-x^2+1
+\leq
+x^2\sin(1/x)+1
+\leq
+x^2+1,
+$$
+</p>
+
+<p>we conclude that</p>
+
+<p>
+$$
+\lim_{x\to 0}
+\left(
+x^2\sin(1/x)+1
+\right)
+=
+1.
+$$
+</p>
+
+</section>
+
+
+<section class="your-turn">
+
+<h2>Your Turn</h2>
+
+<p>Now investigate</p>
+
+<p>
+$$
+f(x)=x^4\cos\left(\frac{7}{x}\right).
+$$
+</p>
+
+<p>We want to estimate</p>
+
+<p>
+$$
+\lim_{x\to 0}
+x^4\cos\left(\frac{7}{x}\right).
+$$
+</p>
+
+<p>First, compute some values.</p>
+
+</section>
+
+
+<section class="code-block" aria-label="Your Python code">
+<div class="code-label">Your Python code</div>
+
+<pre><code>import math
+
+x_values = [0.5, 0.2, 0.1, 0.05, 0.01, 0.005, 0.001]
+
+for x in x_values:
+    y = 0  # CHANGE THIS FORMULA TO MATCH THE NEW FUNCTION ABOVE!
+    print("x =", x, "   f(x) =", y)</code></pre>
+
+</section>
+
+
+<section class="code-block output" aria-label="Output">
+<div class="code-label">Output</div>
+
+<pre>x = 0.5    f(x) = 0
+x = 0.2    f(x) = 0
+x = 0.1    f(x) = 0
+x = 0.05   f(x) = 0
+x = 0.01   f(x) = 0
+x = 0.005  f(x) = 0
+x = 0.001  f(x) = 0</pre>
+
+</section>
+
+
+<section class="question">
+
+<p>What value does</p>
+
+<p>
+$$
+x^4\cos\left(\frac{7}{x}\right)
+$$
+</p>
+
+<p>appear to approach as $x\to 0$?</p>
+
+<label class="answer-label">
+  Your Answer
+  <textarea class="answer" aria-label="Your answer"></textarea>
+</label>
+
+</section>
+
+
+<section class="question">
+
+<h3>Find the squeezing functions</h3>
+
+<p>Since</p>
+
+<p>
+$$
+-1
+\leq
+\cos\left(\frac{7}{x}\right)
+\leq
+1,
+$$
+</p>
+
+<p>what functions can we use to squeeze</p>
+
+<p>
+$$
+x^4\cos\left(\frac{7}{x}\right)?
+$$
+</p>
+
+<p>Complete the inequalities:</p>
+
+<p>
+$$
+\underline{\hspace{2cm}}
+\leq
+x^4\cos\left(\frac{7}{x}\right)
+\leq
+\underline{\hspace{2cm}}.
+$$
+</p>
+
+<label class="answer-label">
+  Your Answer
+  <textarea class="answer" aria-label="Your answer"></textarea>
+</label>
+
+</section>
+
+
+<section class="your-turn">
+
+<h2>Optional Challenge</h2>
+
+<p>Consider</p>
+
+<p>
+$$
+2+\frac{x^2\cos(7/x)}{x^2+1}.
+$$
+</p>
+
+<p>Try to estimate</p>
+
+<p>
+$$
+\lim_{x\to 0}
+\left(
+2+\frac{x^2\cos(7/x)}{x^2+1}
+\right).
+$$
+</p>
+
+<p>
+This example is a little more advanced, but it uses the same idea:
+</p>
+
+<ul>
+  <li>the oscillating part is controlled,</li>
+  <li>the squeezing part goes to $0$,</li>
+  <li>the whole expression approaches a constant.</li>
+</ul>
+
+</section>
+
+
+<section class="code-block" aria-label="Python">
+<div class="code-label">Python</div>
+
+<pre><code>import math
+
+x_values = [0.5, 0.2, 0.1, 0.05, 0.01, 0.005, 0.001]
+
+for x in x_values:
+    y = 2 + (x**2 * math.cos(7/x))/(x**2 + 1)
+    print("x =", x, "   expression =", y)</code></pre>
+
+</section>
+
+
+<section class="code-block output" aria-label="Output">
+<div class="code-label">Output</div>
+
+<pre>x = 0.5    expression = 2.027347443641567
+x = 0.2    expression = 1.9652426074964806
+x = 0.1    expression = 2.0062704871592705
+x = 0.05   expression = 1.9995066993166977
+x = 0.01   expression = 1.9999160979576163
+x = 0.005  expression = 2.000010204548372
+x = 0.001  expression = 2.0000008620125724</pre>
+
+</section>
+
+
+<section class="question">
+
+<p>What value does the expression appear to approach?</p>
+
+<label class="answer-label">
+  Your Answer
+  <textarea class="answer" aria-label="Your answer"></textarea>
+</label>
+
+</section>
+
+</main>
+
+
+<footer class="footer">
+  <div class="footer-inner">
+    Computational Activities for First-Year University Mathematics ·
+    University of Waterloo
+  </div>
+</footer>
+
+</body>
+</html>
