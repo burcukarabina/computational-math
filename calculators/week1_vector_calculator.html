@@ -1,28 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vector Calculator | Applied Linear Algebra</title>
 
-<title>Week 1 | Vector Calculator</title>
-
-<!-- MathJax -->
 <script>
 window.MathJax = {
   tex: {
-    inlineMath: [['\\(','\\)']],
-    displayMath: [['\\[','\\]']]
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
   }
 };
 </script>
-
 <script defer
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
 </script>
 
 <style>
-
 :root {
   --primary: #145e9a;
   --dark: #19354b;
@@ -31,9 +26,7 @@ src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
   --success: #146a52;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -46,56 +39,46 @@ body {
 header {
   background: #133b58;
   color: white;
-  padding: 25px;
+  padding: 24px;
   text-align: center;
 }
 
-header h1 {
-  margin: 0;
-}
-
-header p {
-  margin-bottom: 0;
-}
+header h1 { margin: 0; }
+header p { margin: 5px 0; }
 
 .container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 0 20px;
+  max-width: 850px;
+  margin: 25px auto;
+  padding: 0 18px;
 }
 
 .card {
   background: white;
-  padding: 25px;
+  padding: 24px;
   margin-bottom: 20px;
   border: 1px solid var(--border);
   border-radius: 12px;
 }
 
-h2 {
-  margin-top: 0;
-}
+h2 { margin-top: 0; }
 
 label {
   display: block;
   font-weight: bold;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin: 16px 0 5px;
 }
 
-input,
-select {
+input, select {
   width: 100%;
-  padding: 12px;
+  padding: 11px;
   font-size: 16px;
   border: 1px solid #aabecb;
   border-radius: 6px;
 }
 
 button {
-  padding: 12px 20px;
-  margin-top: 15px;
-  margin-right: 8px;
+  padding: 11px 18px;
+  margin: 16px 8px 0 0;
   background: var(--primary);
   color: white;
   border: none;
@@ -104,9 +87,7 @@ button {
   font-size: 15px;
 }
 
-button:hover {
-  opacity: 0.9;
-}
+button:hover { opacity: 0.9; }
 
 .secondary {
   background: #e7f2fb;
@@ -117,8 +98,9 @@ button:hover {
   background: #edf5fb;
   border-left: 5px solid var(--primary);
   padding: 20px;
-  margin-top: 20px;
+  margin-top: 22px;
   border-radius: 6px;
+  overflow-x: auto;
 }
 
 .steps {
@@ -127,6 +109,7 @@ button:hover {
   padding: 15px;
   margin-top: 15px;
   border-radius: 6px;
+  overflow-x: auto;
 }
 
 .interpret {
@@ -136,19 +119,17 @@ button:hover {
 
 .error {
   color: #a02121;
+  margin-top: 12px;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 footer {
   text-align: center;
-  padding: 25px;
+  padding: 20px;
   color: #536b7b;
-  font-size: 14px;
+  font-size: 13px;
 }
-
 </style>
 </head>
 
@@ -160,209 +141,129 @@ footer {
   <p>Think. Compute. Interpret.</p>
 </header>
 
-<div class="container">
+<main class="container">
 
-<!-- INTRODUCTION -->
+<section class="card">
+  <h2>Computational Toolkit</h2>
 
-<div class="card">
+  <p>
+    Select a mathematical operation, enter the required
+    vectors, and click <strong>Calculate</strong>.
+  </p>
 
-<h2>Computational Toolkit</h2>
+  <p>
+    The calculator performs the computation.
+    Your responsibility is to choose the appropriate
+    operation, interpret the result, and verify
+    that it makes mathematical sense.
+  </p>
 
-<p>
-Choose a mathematical operation, enter the required
-vectors, and click Calculate.
-</p>
+  <p>
+    <strong>Input format:</strong>
+    Enter components separated by commas.
+    For example, <code>2, -1, 3</code>.
+    Fractions such as <code>1/2</code> and
+    decimals such as <code>-0.75</code> are accepted.
+  </p>
+</section>
 
-<p>
-The calculator performs the computation.
-Your responsibility is to interpret and verify
-the mathematical result.
-</p>
+<section class="card">
 
-<p>
-<strong>Input format:</strong>
-Enter vector components separated by commas.
-For example:
-</p>
+  <h2>Vector Calculator</h2>
 
-<p>
-<code>2, -1, 3</code>
-</p>
+  <label for="operation">Select Operation</label>
 
-<p>
-Fractions such as <code>1/2</code> are also accepted.
-</p>
+  <select id="operation" onchange="updateInputs()">
+    <optgroup label="Basic Vector Operations">
+      <option value="add">Vector Addition</option>
+      <option value="subtract">Vector Subtraction</option>
+      <option value="scalar">Scalar Multiplication</option>
+    </optgroup>
 
-</div>
+    <optgroup label="Vector Geometry">
+      <option value="dot">Dot Product</option>
+      <option value="cross">Cross Product</option>
+      <option value="norm">Vector Norm</option>
+      <option value="distance">Distance Between Points</option>
+      <option value="angle">Angle Between Vectors</option>
+    </optgroup>
 
+    <optgroup label="Projections">
+      <option value="projection">Vector Projection</option>
+      <option value="perpendicular">
+        Perpendicular Component
+      </option>
+    </optgroup>
 
-<!-- CALCULATOR -->
+    <optgroup label="Lines">
+      <option value="line">Point on a Line</option>
+    </optgroup>
+  </select>
 
-<div class="card">
+  <label id="labelA" for="vectorA">Vector A</label>
+  <input type="text" id="vectorA" value="2, -1, 3">
 
-<h2>Vector Calculator</h2>
+  <div id="vectorBGroup">
+    <label id="labelB" for="vectorB">Vector B</label>
+    <input type="text" id="vectorB" value="1, 4, 2">
+  </div>
 
-<label for="operation">Select Operation</label>
+  <div id="scalarGroup" class="hidden">
+    <label id="scalarLabel" for="scalar">Scalar</label>
+    <input type="text" id="scalar" value="3">
+  </div>
 
-<select id="operation" onchange="updateInputs()">
+  <button onclick="calculate()">Calculate</button>
 
-<option value="add">Vector Addition</option>
-<option value="subtract">Vector Subtraction</option>
-<option value="scalar">Scalar Multiplication</option>
-<option value="dot">Dot Product</option>
-<option value="cross">Cross Product</option>
-<option value="norm">Vector Norm</option>
-<option value="distance">Distance Between Points</option>
-<option value="angle">Angle Between Vectors</option>
-<option value="projection">Vector Projection</option>
-<option value="perpendicular">Perpendicular Component</option>
-<option value="line">Point on a Line</option>
+  <button class="secondary" onclick="resetCalculator()">
+    Reset
+  </button>
 
-</select>
+  <div id="error" class="error" role="alert"></div>
 
+  <div id="resultBox" class="result hidden">
 
-<label id="labelA" for="vectorA">Vector A</label>
+    <h3>Guided Result</h3>
 
-<input
-type="text"
-id="vectorA"
-value="2, -1, 3"
->
+    <div id="mathResult"></div>
 
+    <p id="explanation"></p>
 
-<div id="vectorBGroup">
+    <p id="interpretation" class="interpret"></p>
 
-<label id="labelB" for="vectorB">Vector B</label>
+    <button
+      id="stepsButton"
+      class="secondary"
+      onclick="toggleSteps()">
+      Show Steps
+    </button>
 
-<input
-type="text"
-id="vectorB"
-value="1, 4, 2"
->
+    <div id="steps" class="steps hidden"></div>
 
-</div>
+  </div>
 
+</section>
 
-<div id="scalarGroup" class="hidden">
-
-<label id="scalarLabel" for="scalar">Scalar</label>
-
-<input
-type="text"
-id="scalar"
-value="3"
->
-
-</div>
-
-
-<button onclick="calculate()">Calculate</button>
-
-<button class="secondary" onclick="loadMission1()">
-Load Mission 1
-</button>
-
-<button class="secondary" onclick="resetCalculator()">
-Reset
-</button>
-
-
-<div id="error" class="error"></div>
-
-
-<div id="resultBox" class="result hidden">
-
-<h3>Guided Result</h3>
-
-<div id="mathResult"></div>
-
-<p id="explanation"></p>
-
-<p id="interpretation" class="interpret"></p>
-
-<button
-id="stepsButton"
-class="secondary"
-onclick="toggleSteps()">
-Show Steps
-</button>
-
-<div id="steps" class="steps hidden"></div>
-
-</div>
-
-</div>
-
-
-<!-- MISSION -->
-
-<div class="card">
-
-<h2>🚁 Mission 1: Tracking a Drone's Position</h2>
-
-<p>
-A drone follows a straight flight path passing through
-\(P=(1,1,2)\) with direction vector
-</p>
-
-\[
-\vec d=
-\begin{bmatrix}
-2\\1\\2
-\end{bmatrix}.
-\]
-
-<p>
-<strong>Your Mission:</strong>
-Determine the drone's position when \(t=2\).
-</p>
-
-<p>
-Recall that the vector equation of a line is
-</p>
-
-\[
-\vec x=\vec p+t\vec d.
-\]
-
-<p>
-<strong>Before using the calculator:</strong>
-Which vector operations are required to determine
-the drone's position?
-</p>
-
-<p>
-Use the calculator to perform the calculations.
-Then interpret the coordinates of the resulting point.
-</p>
-
-</div>
-
-</div>
-
+</main>
 
 <footer>
-Applied Linear Algebra — Computational Toolkit
+  Applied Linear Algebra — Computational Toolkit
 </footer>
-
 
 <script>
 
-// ==========================================
+// ========================================
 // MATHEMATICAL UTILITIES
-// ==========================================
-
-// Parse an individual number or fraction.
+// ========================================
 
 function parseNumber(value) {
-
   const text = value.trim();
 
   const pattern =
     /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:\s*\/\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+))?$/;
 
   if (!pattern.test(text)) {
-    throw new Error("Please enter valid numbers or fractions.");
+    throw new Error("Enter valid numbers or fractions.");
   }
 
   const parts = text.split("/").map(Number);
@@ -376,117 +277,80 @@ function parseNumber(value) {
     : parts[0];
 
   if (!Number.isFinite(result)) {
-    throw new Error("Enter finite numeric values.");
+    throw new Error("Please enter finite numbers.");
   }
 
   return result;
 }
 
-
-// Convert text to vector.
-
 function parseVector(text) {
-
   const values = text.split(",").map(parseNumber);
 
   if (values.length !== 2 && values.length !== 3) {
-    throw new Error(
-      "Vectors must have 2 or 3 components."
-    );
+    throw new Error("Enter a vector in R² or R³.");
   }
 
   return values;
 }
 
-
-// Vector addition.
+function checkDimensions(u, v) {
+  if (u.length !== v.length) {
+    throw new Error("Vectors must have the same dimension.");
+  }
+}
 
 function add(u, v) {
   return u.map((x, i) => x + v[i]);
 }
 
-
-// Vector subtraction.
-
 function subtract(u, v) {
   return u.map((x, i) => x - v[i]);
 }
-
-
-// Scalar multiplication.
 
 function multiply(c, u) {
   return u.map(x => c * x);
 }
 
-
-// Dot product.
-
 function dot(u, v) {
   return u.reduce((sum, x, i) => sum + x * v[i], 0);
 }
 
-
-// Cross product.
-
 function cross(u, v) {
-
   return [
     u[1]*v[2] - u[2]*v[1],
     u[2]*v[0] - u[0]*v[2],
     u[0]*v[1] - u[1]*v[0]
   ];
-
 }
-
-
-// Vector norm.
 
 function norm(u) {
   return Math.hypot(...u);
 }
 
-
-// Format numbers.
-
 function formatNumber(x) {
-
-  if (Math.abs(x) < 1e-12) {
-    return "0";
-  }
-
+  if (Math.abs(x) < 1e-12) return "0";
   return Number(x.toPrecision(10)).toString();
 }
 
-
-// Convert vector to LaTeX.
-
 function vectorLatex(v) {
-
   return "\\begin{bmatrix}" +
     v.map(formatNumber).join("\\\\") +
     "\\end{bmatrix}";
-
 }
-
-
-// Display MathJax.
 
 function renderMath() {
-
   if (window.MathJax && MathJax.typesetPromise) {
-    MathJax.typesetPromise();
+    MathJax.typesetPromise([
+      document.getElementById("resultBox")
+    ]);
   }
-
 }
 
-
-// ==========================================
+// ========================================
 // USER INTERFACE
-// ==========================================
+// ========================================
 
 function updateInputs() {
-
   const operation =
     document.getElementById("operation").value;
 
@@ -505,7 +369,6 @@ function updateInputs() {
   const scalarLabel =
     document.getElementById("scalarLabel");
 
-
   groupB.classList.remove("hidden");
   scalarGroup.classList.add("hidden");
 
@@ -513,12 +376,9 @@ function updateInputs() {
   labelB.textContent = "Vector B";
 
   if (operation === "scalar") {
-
     groupB.classList.add("hidden");
     scalarGroup.classList.remove("hidden");
-
     scalarLabel.textContent = "Scalar c";
-
   }
 
   if (operation === "norm") {
@@ -526,46 +386,38 @@ function updateInputs() {
   }
 
   if (operation === "line") {
-
     labelA.textContent = "Position Vector p";
     labelB.textContent = "Direction Vector d";
 
     scalarGroup.classList.remove("hidden");
     scalarLabel.textContent = "Parameter t";
-
   }
 
   if (operation === "distance") {
-
     labelA.textContent = "Point A";
     labelB.textContent = "Point B";
-
   }
 
   document.getElementById("resultBox")
     .classList.add("hidden");
 
   document.getElementById("error").textContent = "";
-
 }
 
-
-// ==========================================
+// ========================================
 // CALCULATIONS
-// ==========================================
+// ========================================
 
 function calculate() {
-
   const operation =
     document.getElementById("operation").value;
 
-  const error =
+  const errorBox =
     document.getElementById("error");
 
-  error.textContent = "";
+  errorBox.textContent = "";
 
   try {
-
     const u = parseVector(
       document.getElementById("vectorA").value
     );
@@ -576,294 +428,208 @@ function calculate() {
     const needsB = !["scalar", "norm"].includes(operation);
 
     if (needsB) {
-
       v = parseVector(
         document.getElementById("vectorB").value
       );
 
-      if (u.length !== v.length) {
-        throw new Error(
-          "Both vectors must have the same dimension."
-        );
-      }
-
+      checkDimensions(u, v);
     }
 
-    if (operation === "scalar" ||
-        operation === "line") {
-
+    if (operation === "scalar" || operation === "line") {
       c = parseNumber(
         document.getElementById("scalar").value
       );
-
     }
 
-    let result;
-    let latex;
-    let explanation;
-    let interpretation;
-    let steps;
+    let result, latex, explanation, interpretation, steps;
 
-    switch(operation) {
-
-      // VECTOR ADDITION
+    switch (operation) {
 
       case "add":
-
         result = add(u, v);
 
-        latex =
-          vectorLatex(u) + "+" +
-          vectorLatex(v) + "=" +
-          vectorLatex(result);
+        latex = vectorLatex(u) + "+" +
+                vectorLatex(v) + "=" +
+                vectorLatex(result);
 
         explanation =
-          "The resulting vector represents the combined displacement.";
+          "The resulting vector is the sum of the two vectors.";
 
         interpretation =
-          "What does the sum represent geometrically?";
+          "What does this sum represent geometrically?";
 
-        steps =
-          "Add corresponding components: " +
-          result.map((x,i) =>
+        steps = "Add corresponding components: " +
+          result.map((x, i) =>
             `${formatNumber(u[i])} + ${formatNumber(v[i])} = ${formatNumber(x)}`
           ).join("; ");
-
         break;
-
-
-      // VECTOR SUBTRACTION
 
       case "subtract":
-
         result = subtract(u, v);
 
-        latex =
-          vectorLatex(u) + "-" +
-          vectorLatex(v) + "=" +
-          vectorLatex(result);
+        latex = vectorLatex(u) + "-" +
+                vectorLatex(v) + "=" +
+                vectorLatex(result);
 
         explanation =
-          "The result is the difference between the two vectors.";
+          "The resulting vector is the difference between the two vectors.";
 
         interpretation =
-          "If the inputs represent positions, what displacement does the result describe?";
+          "How can vector subtraction describe displacement?";
 
-        steps =
-          "Subtract corresponding components: " +
-          result.map((x,i) =>
+        steps = "Subtract corresponding components: " +
+          result.map((x, i) =>
             `${formatNumber(u[i])} - ${formatNumber(v[i])} = ${formatNumber(x)}`
           ).join("; ");
-
         break;
-
-
-      // SCALAR MULTIPLICATION
 
       case "scalar":
-
         result = multiply(c, u);
 
-        latex =
-          formatNumber(c) + "\\cdot" +
-          vectorLatex(u) + "=" +
-          vectorLatex(result);
+        latex = formatNumber(c) +
+                vectorLatex(u) + "=" +
+                vectorLatex(result);
 
         explanation =
-          "Scalar multiplication changes the length and possibly the direction of a vector.";
+          "The scalar changes the length and possibly the direction of the vector.";
 
         interpretation =
-          "How does this scalar affect the vector's direction?";
+          "How does the scalar affect the vector geometrically?";
 
-        steps =
-          "Multiply each component by " +
+        steps = "Multiply each component by " +
           formatNumber(c) + ": " +
-          result.map((x,i) =>
+          result.map((x, i) =>
             `${formatNumber(c)} × (${formatNumber(u[i])}) = ${formatNumber(x)}`
           ).join("; ");
-
         break;
 
-
-      // DOT PRODUCT
-
       case "dot":
-
         result = dot(u, v);
 
-        latex =
-          vectorLatex(u) +
-          "\\cdot" +
-          vectorLatex(v) +
-          "=" + formatNumber(result);
+        latex = vectorLatex(u) +
+                "\\cdot" + vectorLatex(v) +
+                "=" + formatNumber(result);
 
         if (norm(u) === 0 || norm(v) === 0) {
-
           explanation =
-            "The dot product is zero, but the angle with a zero vector is undefined.";
-
-        } else if (Math.abs(result) < 1e-12) {
-
+            "The angle involving a zero vector is undefined.";
+        } else if (Math.abs(result) < 1e-10 * norm(u) * norm(v)) {
           explanation =
-            "The dot product is zero, so these vectors are perpendicular.";
-
+            "The dot product is approximately zero. The vectors are approximately perpendicular.";
         } else if (result > 0) {
-
           explanation =
-            "The dot product is positive, so the angle is acute.";
-
+            "The dot product is positive, indicating an acute angle.";
         } else {
-
           explanation =
-            "The dot product is negative, so the angle is obtuse.";
-
+            "The dot product is negative, indicating an obtuse angle.";
         }
 
         interpretation =
-          "What does the dot product tell you about the relative directions of the vectors?";
+          "What does the result reveal about the relative directions of the vectors?";
 
-        steps =
-          "Multiply corresponding components and add: " +
-          u.map((x,i) =>
+        steps = "Multiply corresponding components and add: " +
+          u.map((x, i) =>
             `(${formatNumber(x)})(${formatNumber(v[i])})`
           ).join(" + ") +
           " = " + formatNumber(result);
-
         break;
 
-
-      // CROSS PRODUCT
-
       case "cross":
-
         if (u.length !== 3) {
-          throw new Error(
-            "Cross product requires vectors in R3."
-          );
+          throw new Error("Cross product requires vectors in R³.");
         }
 
         result = cross(u, v);
 
-        latex =
-          vectorLatex(u) +
-          "\\times" +
-          vectorLatex(v) +
-          "=" +
-          vectorLatex(result);
+        latex = vectorLatex(u) +
+                "\\times" + vectorLatex(v) +
+                "=" + vectorLatex(result);
 
         explanation =
-          "The cross product is perpendicular to both original vectors.";
+          norm(result) < 1e-10 * norm(u) * norm(v)
+          ? "The cross product is approximately zero."
+          : "The cross product is perpendicular to both original vectors.";
 
         interpretation =
-          "How could you verify perpendicularity using the dot product?";
+          "How could you verify this result using the dot product?";
 
         steps =
-          "Compute the three components: " +
-          `u₂v₃ − u₃v₂ = ${formatNumber(result[0])}; ` +
-          `u₃v₁ − u₁v₃ = ${formatNumber(result[1])}; ` +
-          `u₁v₂ − u₂v₁ = ${formatNumber(result[2])}.`;
-
+          "First component: u₂v₃ − u₃v₂ = " +
+          formatNumber(result[0]) +
+          "; second component: u₃v₁ − u₁v₃ = " +
+          formatNumber(result[1]) +
+          "; third component: u₁v₂ − u₂v₁ = " +
+          formatNumber(result[2]);
         break;
 
-
-      // NORM
-
       case "norm":
-
         result = norm(u);
 
-        latex =
-          "\\left\\|" +
-          vectorLatex(u) +
-          "\\right\\|=" +
-          formatNumber(result);
+        latex = "\\left\\|" + vectorLatex(u) +
+                "\\right\\|=" + formatNumber(result);
 
         explanation =
           "The norm represents the length of the vector.";
 
         interpretation =
-          "What physical quantity could this represent in drone navigation?";
+          "What does the length of this vector tell you?";
 
-        steps =
-          "Square the components, add them, and take the square root: " +
-          "√(" +
+        steps = "Take the square root of the sum of squares: √(" +
           u.map(x => `(${formatNumber(x)})²`).join(" + ") +
           ") = " + formatNumber(result);
-
         break;
 
+      case "distance": {
+        const displacement = subtract(v, u);
+        result = norm(displacement);
 
-      // DISTANCE
-
-      case "distance":
-
-        result = norm(subtract(v, u));
-
-        latex =
-          "\\operatorname{dist}(A,B)=" +
-          formatNumber(result);
+        latex = "\\operatorname{dist}(A,B)=" +
+                formatNumber(result);
 
         explanation =
-          "This is the straight-line distance between the two points.";
+          "This is the straight-line distance between the points.";
 
         interpretation =
           "How does distance differ from displacement?";
 
-        steps =
-          "First calculate B − A = [" +
-          subtract(v,u).map(formatNumber).join(", ") +
-          "]. Then find its norm: " +
+        steps = "First calculate B − A = [" +
+          displacement.map(formatNumber).join(", ") +
+          "]. Then calculate its norm: " +
           formatNumber(result);
-
         break;
+      }
 
-
-      // ANGLE
-
-      case "angle":
-
+      case "angle": {
         if (norm(u) === 0 || norm(v) === 0) {
           throw new Error(
             "The angle is undefined for a zero vector."
           );
         }
 
-        const cosine = Math.max(
-          -1,
-          Math.min(
-            1,
-            dot(u,v)/(norm(u)*norm(v))
-          )
-        );
+        const cosine = Math.max(-1, Math.min(1,
+          dot(u, v) / (norm(u) * norm(v))
+        ));
 
-        result = Math.acos(cosine)*180/Math.PI;
+        result = Math.acos(cosine) * 180 / Math.PI;
 
-        latex =
-          "\\theta\\approx" +
-          formatNumber(result) +
-          "^\\circ";
+        latex = "\\theta\\approx" +
+                formatNumber(result) + "^\\circ";
 
         explanation =
           "This is the smaller angle between the two vectors.";
 
         interpretation =
-          "Is this angle acute, right, or obtuse?";
+          "Is the angle acute, right, or obtuse?";
 
         steps =
           "Use cos(θ) = (u·v)/(|u||v|), then calculate arccos. " +
-          "The resulting angle is " +
-          formatNumber(result) + " degrees.";
-
+          "Angle = " + formatNumber(result) + " degrees.";
         break;
-
-
-      // PROJECTION
+      }
 
       case "projection":
-
-      case "perpendicular":
-
-        const denominator = dot(v,v);
+      case "perpendicular": {
+        const denominator = dot(v, v);
 
         if (denominator === 0) {
           throw new Error(
@@ -871,87 +637,69 @@ function calculate() {
           );
         }
 
-        const factor = dot(u,v)/denominator;
-
-        const projection = multiply(factor,v);
+        const factor = dot(u, v) / denominator;
+        const projection = multiply(factor, v);
 
         result = operation === "projection"
           ? projection
-          : subtract(u,projection);
+          : subtract(u, projection);
 
-        latex =
-          operation === "projection"
-          ? "\\operatorname{proj}_{v}(u)=" +
+        latex = operation === "projection"
+          ? "\\operatorname{proj}_{\\vec v}\\vec u=" +
             vectorLatex(result)
-          : "u-\\operatorname{proj}_{v}(u)=" +
+          : "\\vec u-\\operatorname{proj}_{\\vec v}\\vec u=" +
             vectorLatex(result);
 
-        explanation =
-          operation === "projection"
+        explanation = operation === "projection"
           ? "This is the component of u parallel to v."
           : "This is the component of u perpendicular to v.";
 
         interpretation =
-          "How could you verify your result using a dot product?";
+          "How could you verify your answer using the dot product?";
 
         steps =
-          "First calculate (u·v)/(v·v) = " +
+          "Calculate (u·v)/(v·v) = " +
           formatNumber(factor) +
-          ". Multiply v by this scalar to obtain the projection [" +
+          ". Multiply v by this scalar to obtain [" +
           projection.map(formatNumber).join(", ") +
           "]." +
           (operation === "perpendicular"
-            ? " Subtract this projection from u."
+            ? " Then subtract this from u."
             : "");
-
         break;
+      }
 
-
-      // POSITION ON A LINE
-
-      case "line":
-
+      case "line": {
         if (norm(v) === 0) {
           throw new Error(
             "The direction vector must be nonzero."
           );
         }
 
-        const displacement = multiply(c,v);
+        const displacement = multiply(c, v);
+        result = add(u, displacement);
 
-        result = add(u,displacement);
-
-        latex =
-          "\\vec{x}=" +
-          vectorLatex(u) +
-          "+" +
-          formatNumber(c) +
-          vectorLatex(v) +
-          "=" +
-          vectorLatex(result);
+        latex = "\\vec{x}=" +
+                vectorLatex(u) + "+" +
+                formatNumber(c) + vectorLatex(v) +
+                "=" + vectorLatex(result);
 
         explanation =
-          "This is the position on the line corresponding to t = " +
+          "This is the point on the line corresponding to t = " +
           formatNumber(c) + ".";
 
         interpretation =
-          "What do these coordinates represent in the drone navigation problem?";
+          "What do these coordinates represent geometrically?";
 
-        steps =
-          "First calculate t·d = [" +
+        steps = "Calculate t·d = [" +
           displacement.map(formatNumber).join(", ") +
-          "]. Then add p = [" +
+          "]. Add the position vector p = [" +
           u.map(formatNumber).join(", ") +
           "] to obtain [" +
-          result.map(formatNumber).join(", ") +
-          "].";
-
+          result.map(formatNumber).join(", ") + "].";
         break;
-
+      }
     }
-
-
-    // DISPLAY RESULTS
 
     document.getElementById("mathResult").textContent =
       "\\[" + latex + "\\]";
@@ -962,8 +710,7 @@ function calculate() {
     document.getElementById("interpretation").textContent =
       "Interpret: " + interpretation;
 
-    document.getElementById("steps").textContent =
-      steps;
+    document.getElementById("steps").textContent = steps;
 
     document.getElementById("steps").classList.add("hidden");
 
@@ -975,74 +722,43 @@ function calculate() {
 
     renderMath();
 
-  } catch(errorMessage) {
-
-    error.textContent = errorMessage.message;
+  } catch (e) {
+    errorBox.textContent = e.message;
 
     document.getElementById("resultBox")
       .classList.add("hidden");
-
   }
-
 }
 
-
-// ==========================================
-// SHOW / HIDE STEPS
-// ==========================================
+// ========================================
+// OPTIONAL STEPS
+// ========================================
 
 function toggleSteps() {
-
   const steps = document.getElementById("steps");
-
   const button = document.getElementById("stepsButton");
 
   steps.classList.toggle("hidden");
 
-  button.textContent =
-    steps.classList.contains("hidden")
+  button.textContent = steps.classList.contains("hidden")
     ? "Show Steps"
     : "Hide Steps";
-
 }
 
-
-// ==========================================
-// LOAD DRONE MISSION 1
-// ==========================================
-
-function loadMission1() {
-
-  document.getElementById("operation").value = "line";
-
-  updateInputs();
-
-  document.getElementById("vectorA").value = "1, 1, 2";
-
-  document.getElementById("vectorB").value = "2, 1, 2";
-
-  document.getElementById("scalar").value = "2";
-
-}
-
-
-// ==========================================
+// ========================================
 // RESET
-// ==========================================
+// ========================================
 
 function resetCalculator() {
-
   document.getElementById("operation").value = "add";
-
   document.getElementById("vectorA").value = "2, -1, 3";
-
   document.getElementById("vectorB").value = "1, 4, 2";
-
   document.getElementById("scalar").value = "3";
 
   updateInputs();
-
 }
+
+updateInputs();
 
 </script>
 
